@@ -12,9 +12,6 @@ public class RecommenderEmployeeEntityConfiguration : IEntityTypeConfiguration<R
 
         builder.HasKey(re => re.Id);
 
-        builder.Property(re => re.RecommendationLevel)
-            .IsRequired();
-
         builder.Property(re => re.AssignDate)
             .IsRequired();
 

@@ -6,7 +6,6 @@ public class RecommenderEmployeeEntity : BaseEntity
 {
     public int EmployeeId { get; set; }
     public int RecommenderEmployeeId { get; set; }
-    public int RecommendationLevel { get; set; }
     public DateTime AssignDate { get; set; }
 
 }

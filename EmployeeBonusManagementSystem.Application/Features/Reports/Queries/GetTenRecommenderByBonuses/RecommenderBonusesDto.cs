@@ -1,6 +1,6 @@
-﻿namespace EmployeeBonusManagementSystem.Application.DTO;
+﻿namespace EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTenRecommenderByBonuses;
 
-public class RecommenderBonusDto
+public class RecommenderBonusesDto
 {
     public required string RecommenderName { get; set; }
     public int TotalRecommendedBonuses { get; set; }

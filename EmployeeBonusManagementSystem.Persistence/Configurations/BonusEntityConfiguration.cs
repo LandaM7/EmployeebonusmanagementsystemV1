@@ -27,6 +27,9 @@ public class BonusEntityConfiguration : IEntityTypeConfiguration<BonusEntity>
 
         builder.Property(b => b.RecommenderBonus)
             .IsRequired();
+
+        builder.Property(b => b.RecommendationLevel)
+            .IsRequired();
     }
 }
 

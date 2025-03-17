@@ -1,4 +1,4 @@
-﻿namespace EmployeeBonusManagementSystem.Application.DTO;
+﻿namespace EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalSalariesByDepartment;
 
 public class DepartmentSalaryDto
 {
