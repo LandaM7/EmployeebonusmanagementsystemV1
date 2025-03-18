@@ -5,5 +5,5 @@ namespace EmployeeBonusManagementSystem.Application.Features.Reports.Queries.Get
 public record GetTotalSalariesByDepartmentQuery(
     DateTime StartDate,
     DateTime EndDate)
-    : IRequest<DepartmentSalaryDto>;
+    : IRequest<List<DepartmentSalaryDto>>;
 

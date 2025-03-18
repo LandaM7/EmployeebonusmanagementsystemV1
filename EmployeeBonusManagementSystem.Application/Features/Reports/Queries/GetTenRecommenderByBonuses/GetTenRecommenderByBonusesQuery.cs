@@ -5,4 +5,4 @@ namespace EmployeeBonusManagementSystem.Application.Features.Reports.Queries.Get
 public record GetTenRecommenderByBonusesQuery(
     DateTime StartDate,
     DateTime EndDate)
-    : IRequest<RecommenderBonusesDto>;
+    : IRequest<List<RecommenderBonusesDto>>;

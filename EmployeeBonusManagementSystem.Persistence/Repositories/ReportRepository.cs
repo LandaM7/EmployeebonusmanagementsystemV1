@@ -1,7 +1,10 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTenEmployeeByBonuses;
+using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTenRecommenderByBonuses;
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalBonuses;
+using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalBonusesByDepartment;
+using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalSalariesByDepartment;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
@@ -59,62 +62,62 @@ namespace EmployeeBonusManagementSystem.Infrastructure.Repositories
             }
         }
 
-        // 10 თანამშრომელი, ვისი რეკომენდაციითაც ყველაზე მეტი ბონუსი გაიცა მითითებულ თარიღში
-        //public async Task<List<RecommenderBonusesDto>> GetTenRecommenderByBonusesAsync(DateTime startDate, DateTime endDate)
-        //{
-        //    try
-        //    {
-        //        var result = await sqlQueryRepository.LoadData<EmployeeBonusesDto, dynamic>(
-        //               "GetTenRecommenderByBonuses",
-        //               new { StartDate = startDate, EndDate = endDate },
-        //               configuration.GetConnectionString("DefaultConnection"),
-        //               CommandType.StoredProcedure);
-        //        return result.ToList();
-        //    }
+        //10 თანამშრომელი, ვისი რეკომენდაციითაც ყველაზე მეტი ბონუსი გაიცა მითითებულ თარიღში
+        public async Task<List<RecommenderBonusesDto>> GetTenRecommenderByBonusesAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var result = await sqlQueryRepository.LoadData<RecommenderBonusesDto, dynamic>(
+                       "GetTenRecommenderByBonuses",
+                       new { StartDate = startDate, EndDate = endDate },
+                       configuration.GetConnectionString("DefaultConnection"),
+                       CommandType.StoredProcedure);
+                return result.ToList();
+            }
 
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
 
-        ////ჯამურად გაცემული ხელფასების რაოდენობა მითითებულ თარიღში  დეპარტამენტების მიხედვით
-        //public async Task<List<DepartmentSalaryDto>> GetTotalSalariesByDepartmentAsync(DateTime startDate, DateTime endDate)
-        //{
-        //    try
-        //    {
-        //        var result = await sqlQueryRepository.LoadData<EmployeeBonusesDto, dynamic>(
-        //           "GetTotalSalariesByDepartment",
-        //           new { StartDate = startDate, EndDate = endDate },
-        //           configuration.GetConnectionString("DefaultConnection"),
-        //           CommandType.StoredProcedure);
-        //        return result.ToList();
-        //    }
+        //ჯამურად გაცემული ხელფასების რაოდენობა მითითებულ თარიღში  დეპარტამენტების მიხედვით
+        public async Task<List<DepartmentSalaryDto>> GetTotalSalariesByDepartmentAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var result = await sqlQueryRepository.LoadData<DepartmentSalaryDto, dynamic>(
+                   "GetTotalSalariesByDepartment",
+                   new { StartDate = startDate, EndDate = endDate },
+                   configuration.GetConnectionString("DefaultConnection"),
+                   CommandType.StoredProcedure);
+                return result.ToList();
+            }
 
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-        ////ჯამურად გაცემული ბონუსების რაოდენობა მითითებულ თარიღში დეპარტამენტების მიხედვით
-        //public async Task<List<DepartmentBonusesDto>> GetTotalBonusesByDepartmentAsync(DateTime startDate, DateTime endDate)
-        //{
-        //    try
-        //    {
-        //        var result = await sqlQueryRepository.LoadData<EmployeeBonusesDto, dynamic>(
-        //               "GetTotalBonusesByDepartment",
-        //               new { StartDate = startDate, EndDate = endDate },
-        //               configuration.GetConnectionString("DefaultConnection"),
-        //               CommandType.StoredProcedure);
-        //        return result.ToList();
-        //    }
+        //ჯამურად გაცემული ბონუსების რაოდენობა მითითებულ თარიღში დეპარტამენტების მიხედვით
+        public async Task<List<DepartmentBonusesDto>> GetTotalBonusesByDepartmentAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var result = await sqlQueryRepository.LoadData<DepartmentBonusesDto, dynamic>(
+                       "GetTotalBonusesByDepartment",
+                       new { StartDate = startDate, EndDate = endDate },
+                       configuration.GetConnectionString("DefaultConnection"),
+                       CommandType.StoredProcedure);
+                return result.ToList();
+            }
 
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
