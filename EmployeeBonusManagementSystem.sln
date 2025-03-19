@@ -11,25 +11,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{32BB8BDC-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{9A5E2D5E-6762-429C-8C84-811E6DFEC2A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeBonusManagementSystem.Domain", "EmployeeBonusManagementSystem.Domain\EmployeeBonusManagementSystem.Domain.csproj", "{B5B2957F-36EC-4438-81AA-172BD1801A0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeBonusManagementSystem.Domain", "EmployeeBonusManagementSystem.Domain\EmployeeBonusManagementSystem.Domain.csproj", "{B5B2957F-36EC-4438-81AA-172BD1801A0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeBonusManagementSystem.Application", "EmployeeBonusManagementSystem.Application\EmployeeBonusManagementSystem.Application.csproj", "{52B17B1F-DAA9-4E27-B193-AD0749654A19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeBonusManagementSystem.Application", "EmployeeBonusManagementSystem.Application\EmployeeBonusManagementSystem.Application.csproj", "{52B17B1F-DAA9-4E27-B193-AD0749654A19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{9CBBF56F-F515-4101-8A78-2656E71D7A30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeBonusManagementSystem.Infrastructure", "EmployeeBonusManagementSystem.Infrastructure\EmployeeBonusManagementSystem.Infrastructure.csproj", "{477B2D3A-FADC-42C0-B557-08A9A11FA425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeBonusManagementSystem.Infrastructure", "EmployeeBonusManagementSystem.Infrastructure\EmployeeBonusManagementSystem.Infrastructure.csproj", "{477B2D3A-FADC-42C0-B557-08A9A11FA425}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeBonusManagementSystem.Persistence", "EmployeeBonusManagementSystem.Persistence\EmployeeBonusManagementSystem.Persistence.csproj", "{3C89B677-437A-49D4-9116-E5ABEE4FE542}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeBonusManagementSystem.Persistence", "EmployeeBonusManagementSystem.Persistence\EmployeeBonusManagementSystem.Persistence.csproj", "{3C89B677-437A-49D4-9116-E5ABEE4FE542}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{14BFC0D1-B78C-493B-BF86-2334E75CE48D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIs", "APIs", "{ED635F95-6F83-4D58-A743-8219E35779B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeBonusManagementSystem.Api", "EmployeeBonusManagementSystem.Api\EmployeeBonusManagementSystem.Api.csproj", "{F9E35E58-8D22-46C7-AF53-D71B28B73622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeBonusManagementSystem.Api", "EmployeeBonusManagementSystem.Api\EmployeeBonusManagementSystem.Api.csproj", "{F9E35E58-8D22-46C7-AF53-D71B28B73622}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{E9680A10-38F8-447F-AF1E-DD6113547415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeBonusManagementSystem.UnitTests", "EmployeeBonusManagementSystem.UnitTests\EmployeeBonusManagementSystem.UnitTests.csproj", "{BC546869-3613-4B2D-9F58-233401AE1C8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeBonusManagementSystem.UnitTests", "EmployeeBonusManagementSystem.UnitTests\EmployeeBonusManagementSystem.UnitTests.csproj", "{BC546869-3613-4B2D-9F58-233401AE1C8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

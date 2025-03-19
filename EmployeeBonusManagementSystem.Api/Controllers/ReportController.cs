@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeeBonusManagementSystem.Api.Controllers
 {
     [ApiController]
-    [Route("api/reports")]
+    [Route("api/Reports")]
     public class ReportController : ControllerBase
     {
         private readonly IReportRepository _reportRepository;

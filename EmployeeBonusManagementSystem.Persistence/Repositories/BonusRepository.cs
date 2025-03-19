@@ -1,5 +1,6 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
+using EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 using EmployeeBonusManagementSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -46,6 +47,25 @@ public class BonusRepository(
         {
             throw new Exception(ex.Message);
         }
+
     }
+    public async Task<List<AddBonusesDto>> AddRecommenderBonusAsync(int employeeId, decimal bonusAmount)
+    {
+        try
+        {
+            var result = await sqlQueryRepository.LoadData<AddBonusesDto, dynamic>(
+                "[HRManagementEmployee].[dbo].[ProcessRecommenderBonus]",
+                new { EmployeeId = employeeId, BonusAmount = bonusAmount },
+                configuration.GetConnectionString("DefaultConnection"),
+                CommandType.StoredProcedure);
+
+            return result.ToList();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
 }
 

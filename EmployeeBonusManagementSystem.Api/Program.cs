@@ -1,4 +1,5 @@
-﻿using EmployeeBonusManagementSystem.Persistence;
+﻿using EmployeeBonusManagementSystem.Application;
+using EmployeeBonusManagementSystem.Persistence;
 
 
 // Add services to the container.
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSwaggerGen();
 
     builder.Services.AddPersistence(builder.Configuration);
+    builder.Services.AddApplication();
 
 
 }
@@ -35,4 +37,3 @@ var app = builder.Build();
 
     app.Run();
 }
-
