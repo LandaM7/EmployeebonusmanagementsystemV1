@@ -15,4 +15,5 @@ public interface IReportRepository
     Task<List<RecommenderBonusesDto>> GetTenRecommenderByBonusesAsync(DateTime startDate, DateTime endDate);
     Task<List<DepartmentSalaryDto>> GetTotalSalariesByDepartmentAsync(DateTime startDate, DateTime endDate);
     Task<List<DepartmentBonusesDto>> GetTotalBonusesByDepartmentAsync(DateTime startDate, DateTime endDate);
+
 }
