@@ -1,5 +1,6 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
+using EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 using EmployeeBonusManagementSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -9,8 +10,10 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories;
 public class BonusRepository(
         ISqlQueryRepository sqlQueryRepository,
         ISqlCommandRepository sqlCommandRepository,
+        IUnitOfWork unitOfWork,
         IConfiguration configuration)
         : IBonusRepository
+
 {
     public async Task<int> AddBonusAsync(BonusEntity bonus)
     {
@@ -46,6 +49,29 @@ public class BonusRepository(
         {
             throw new Exception(ex.Message);
         }
-    }
-}
 
+    }
+    public async Task<List<AddBonusesDto>> AddRecommenderBonusAsync(int employeeId, decimal bonusAmount)
+    {
+        try
+        {
+            await unitOfWork.BeginTransactionAsync();
+
+            var result = await sqlQueryRepository.LoadData<AddBonusesDto, dynamic>(
+                "[HRManagementEmployee].[dbo].[AddBonuses]",
+                new { EmployeeId = employeeId, BonusAmount = bonusAmount },
+                configuration.GetConnectionString("DefaultConnection"),
+                CommandType.StoredProcedure);
+
+            await unitOfWork.CommitAsync();
+            return result.ToList();
+
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackAsync();
+            throw new Exception(ex.Message);
+        }
+    }
+
+}

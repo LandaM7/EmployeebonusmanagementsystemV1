@@ -1,4 +1,5 @@
 ﻿using EmployeeBonusManagementSystem.Domain.Entities;
+using EmployeeBonusManagementSystem.Application;
 using EmployeeBonusManagementSystem.Persistence;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,8 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddAutoMapper(typeof(Program));
 
 
-	builder.Services.AddPersistence(builder.Configuration);
-     
+    builder.Services.AddPersistence(builder.Configuration);
+    builder.Services.AddApplication();
+
+
 }
 
 // Configure the HTTP request pipeline.
@@ -40,4 +43,3 @@ var app = builder.Build();
 
     app.Run();
 }
-

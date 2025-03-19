@@ -46,8 +46,13 @@ public static class PersistenceDI
         services.AddScoped<RoleAssignmentService>();
 
 
-
-		return services;
+        services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IBonusRepository, BonusRepository>();
+        services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
+        services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return services;
 
     }
 }
