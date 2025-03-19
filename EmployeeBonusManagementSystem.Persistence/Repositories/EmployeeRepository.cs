@@ -1,6 +1,5 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
-using EmployeeBonusManagementSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
@@ -12,24 +11,26 @@ namespace EmployeeBonusManagementSystem.Infrastructure.Repositories
         : IEmployeeRepository
     {
 
-        public async Task<EmployeeEntity?> GetByPersonalNumberAsync(string personalNumber)
+        public async Task<(bool, int)> GetEmployeeExistsByPersonalNumberAsync(string personalNumber)
         {
             try
             {
                 var query = @"
                     SELECT 
-                        Id AS EmployeeId 
+                        Id 
                     FROM
                         [HRManagementEmployee].[dbo].[Employees](NOLOCK)
                     WHERE
                         PersonalNumber = @PersonalNumber;
                 ";
 
-                return await sqlQueryRepository.LoadDataFirstOrDefault<EmployeeEntity, dynamic>(
+                var result = await sqlQueryRepository.LoadDataFirstOrDefault<int, dynamic>(
                     query,
                     new { PersonalNumber = personalNumber },
                     configuration.GetConnectionString("DefaultConnection"),
                     CommandType.Text);
+
+                return (result > 0, result);
             }
             catch (Exception ex)
             {

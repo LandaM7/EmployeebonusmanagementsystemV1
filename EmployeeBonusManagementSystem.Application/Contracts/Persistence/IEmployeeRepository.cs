@@ -1,10 +1,8 @@
-﻿using EmployeeBonusManagementSystem.Domain.Entities;
-
-namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+﻿namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
 public interface IEmployeeRepository
 {
-    Task<EmployeeEntity?> GetByPersonalNumberAsync(string personalNumber);
+    Task<(bool, int)> GetEmployeeExistsByPersonalNumberAsync(string personalNumber);
 }
 
 

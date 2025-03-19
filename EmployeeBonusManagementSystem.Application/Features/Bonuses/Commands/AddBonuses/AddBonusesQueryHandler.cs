@@ -5,8 +5,6 @@ using MediatR;
 namespace EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 
 public class AddBonusesQueryHandler(
-    IBonusRepository bonusRepository,
-    IEmployeeRepository employeeRepository,
     IUnitOfWork unitOfWork
     /*JsonWebToken როლები*/)
     : IRequestHandler<AddBonusesQuery, List<AddBonusesDto>>
@@ -17,32 +15,33 @@ public class AddBonusesQueryHandler(
 
     {
         // თანამშრომლის ნახვა PersonalNumber ით
-        var employee = await employeeRepository.GetByPersonalNumberAsync(request.PersonalNumber);
-        if (employee == null)
-        {
-            throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
-        }
-
-        var reason = $"{DateTime.UtcNow:MMMM} თვის ბონუსის ჩარიცხვა";
-
-        var mainBonus = new BonusEntity
-        {
-            EmployeeId = employee.Id,
-            Amount = request.BonusAmount,
-            Reason = reason,
-            CreateDate = DateTime.UtcNow,
-            IsRecommenderBonus = false,
-            RecommendationLevel = 0,
-            //CreateByUserId = adminUserId, ეს ჯერ არ მაქვს
-        };
-        //int adminUserId = currentUserService.GetUserId(); ეს JWT
-
-
-        await unitOfWork.BeginTransactionAsync();
         try
         {
-            await bonusRepository.AddBonusAsync(mainBonus);
-            await bonusRepository.AddRecommenderBonusAsync(employee.Id, request.BonusAmount);
+            await unitOfWork.OpenAsync();
+            await unitOfWork.BeginTransactionAsync();
+
+            var employeeExists = await unitOfWork.EmployeeRepository.GetEmployeeExistsByPersonalNumberAsync(request.PersonalNumber);
+            if (!employeeExists.Item1)
+            {
+                throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
+            }
+
+            var reason = $"{DateTime.UtcNow:MMMM} თვის ბონუსის ჩარიცხვა";
+
+            var mainBonus = new BonusEntity
+            {
+                EmployeeId = employeeExists.Item2,
+                Amount = request.BonusAmount,
+                Reason = reason,
+                CreateDate = DateTime.UtcNow,
+                IsRecommenderBonus = false,
+                RecommendationLevel = 0,
+                //CreateByUserId = adminUserId, ეს ჯერ არ მაქვს
+            };
+            //int adminUserId = currentUserService.GetUserId(); ეს JWT
+
+            await unitOfWork.BonusRepository.AddBonusAsync(mainBonus);
+            await unitOfWork.BonusRepository.AddRecommenderBonusAsync(employeeExists.Item2, request.BonusAmount);
             await unitOfWork.CommitAsync();
 
             var bonuses = new List<AddBonusesDto>
@@ -60,10 +59,14 @@ public class AddBonusesQueryHandler(
 
             return bonuses;
         }
-        catch
+        catch (Exception ex)
         {
             await unitOfWork.RollbackAsync();
-            throw;
+            throw new Exception(ex.Message);
+        }
+        finally
+        {
+            await unitOfWork.CloseAsync();
         }
     }
 }

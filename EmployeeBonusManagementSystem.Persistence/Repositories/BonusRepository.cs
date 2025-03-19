@@ -10,7 +10,6 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories;
 public class BonusRepository(
         ISqlQueryRepository sqlQueryRepository,
         ISqlCommandRepository sqlCommandRepository,
-        IUnitOfWork unitOfWork,
         IConfiguration configuration)
         : IBonusRepository
 
@@ -55,7 +54,6 @@ public class BonusRepository(
     {
         try
         {
-            await unitOfWork.BeginTransactionAsync();
 
             var result = await sqlQueryRepository.LoadData<AddBonusesDto, dynamic>(
                 "[HRManagementEmployee].[dbo].[AddBonuses]",
@@ -63,13 +61,13 @@ public class BonusRepository(
                 configuration.GetConnectionString("DefaultConnection"),
                 CommandType.StoredProcedure);
 
-            await unitOfWork.CommitAsync();
+
             return result.ToList();
 
         }
         catch (Exception ex)
         {
-            await unitOfWork.RollbackAsync();
+
             throw new Exception(ex.Message);
         }
     }

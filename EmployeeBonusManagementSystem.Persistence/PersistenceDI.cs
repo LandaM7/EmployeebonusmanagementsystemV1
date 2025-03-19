@@ -3,6 +3,7 @@ using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Infrastructure.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Common;
+using EmployeeBonusManagementSystem.Persistence.Repositories.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ public static class PersistenceDI
         services.AddScoped<IBonusRepository, BonusRepository>();
         services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
         services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
         return services;
 
     }
