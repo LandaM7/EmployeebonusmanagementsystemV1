@@ -8,6 +8,7 @@ using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
 using EmployeeBonusManagementSystem.Infrastructure.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Factory;
+using EmployeeBonusManagementSystem.Persistence.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Common;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Implementations;
 using MediatR;
@@ -52,11 +53,11 @@ public static class PersistenceDI
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
 
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
 		services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<RoleAssignmentService>();
+        //services.AddScoped<RoleAssignmentService>();
         services.AddScoped<IRequestHandler<AddEmployeeCommand, bool>, AddEmployeeCommandHandler>();
 
 

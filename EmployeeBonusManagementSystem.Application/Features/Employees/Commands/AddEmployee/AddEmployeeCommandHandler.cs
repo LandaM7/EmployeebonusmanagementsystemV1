@@ -34,54 +34,58 @@ namespace EmployeeBonusManagementSystem.Application.Features.Employees.Commands.
 		}
 
 		public async Task<bool> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
+
 		{
-			try
+			using (var transaction = _unitOfWork.BeginTransaction())
 			{
-				// Log the start of the handler processing
-				Console.WriteLine($"[INFO] Handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}");
-
-				// Map EmployeeDto to EmployeeEntity
-				var employee = _mapper.Map<EmployeeEntity>(request.EmployeeDto);
-				Console.WriteLine($"UserName after mapping: {employee.UserName}"); // Add this line
-
-				Console.WriteLine($"[INFO] Mapped EmployeeDto to EmployeeEntity successfully.");
-
-				// Hash the password and generate the refresh token
-				var hasher = new PasswordHasher<EmployeeEntity>();
-				employee.Password = hasher.HashPassword(null, request.EmployeeDto.Password);
-
-				Console.WriteLine($"[INFO] Password hashed for Employee: {request.EmployeeDto.FirstName}");
-
-				employee.RefreshToken = _jwtService.GenerateRefreshToken();
-				Console.WriteLine($"[INFO] Generated refresh token for Employee: {request.EmployeeDto.FirstName}");
-				
-				Console.WriteLine($"CreateDate before mapping: {employee.CreateDate}"); // Add this line
-
-				employee.CreateDate = DateTime.UtcNow;
-				Console.WriteLine($"CreateDate after mapping: {employee.CreateDate}"); // Add this line
-
-				employee.PasswordChangeDate = DateTime.UtcNow;
-
-				// Add the employee to the repository
-				await _employeeRepository.AddEmployeeAsync(employee , request.EmployeeDto.Role );
-				Console.WriteLine($"[INFO] Employee added to repository: {request.EmployeeDto.FirstName}");
-
-				// Complete the transaction
-				var saveResult = await _unitOfWork.CompleteAsync();
-				if (saveResult > 0)
+				try
 				{
-					Console.WriteLine($"[INFO] Employee saved successfully in database: {request.EmployeeDto.FirstName}");
-					return true;
+					// Log the start of the handler processing
+					Console.WriteLine(
+						$"[INFO] Handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}");
+
+					// Map EmployeeDto to EmployeeEntity
+					var employee = _mapper.Map<EmployeeEntity>(request.EmployeeDto);
+					Console.WriteLine($"UserName after mapping: {employee.UserName}"); // Add this line
+
+					Console.WriteLine($"[INFO] Mapped EmployeeDto to EmployeeEntity successfully.");
+
+					// Hash the password and generate the refresh token
+					var hasher = new PasswordHasher<EmployeeEntity>();
+					employee.Password = hasher.HashPassword(null, request.EmployeeDto.Password);
+
+
+					employee.RefreshToken = _jwtService.GenerateRefreshToken();
+
+
+					employee.CreateDate = DateTime.UtcNow;
+					employee.PasswordChangeDate = DateTime.UtcNow;
+
+					// Add the employee to the repository
+					await _employeeRepository.AddEmployeeAsync(employee, request.EmployeeDto.Role,transaction);
+
+
+					// Complete the transaction
+					var saveResult = await _unitOfWork.CompleteAsync();
+					if (saveResult > 0)
+					{
+						Console.WriteLine(
+							$"[INFO] Employee saved successfully in database: {request.EmployeeDto.FirstName}");
+						return true;
+					}
+
+					// Log warning if save fails
+					Console.WriteLine($"[WARN] Failed to save Employee: {request.EmployeeDto.FirstName} in database.");
+					return false;
 				}
-				// Log warning if save fails
-				Console.WriteLine($"[WARN] Failed to save Employee: {request.EmployeeDto.FirstName} in database.");
-				return false;
-			}
-			catch (Exception ex)
-			{
-				// Log the exception details
-				Console.WriteLine($"[ERROR] Error occurred while handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}. Exception: {ex.Message}");
-				return false;
+
+				catch (Exception ex)
+				{
+					// Log the exception details
+					Console.WriteLine(
+						$"[ERROR] Error occurred while handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}. Exception: {ex.Message}");
+					return false;
+				}
 			}
 		}
 	}

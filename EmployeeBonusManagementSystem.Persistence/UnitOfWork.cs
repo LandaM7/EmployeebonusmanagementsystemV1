@@ -30,8 +30,7 @@ namespace EmployeeBonusManagementSystem.Persistence
 		{
 			if (_transaction == null)
 			{
-			_connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
-			_connection.Open();
+			
 				_transaction = _connection.BeginTransaction();
 			}
 			return _transaction;

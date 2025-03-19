@@ -189,3 +189,6 @@ D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\bin\D
 D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
 D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stores.dll
 D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\obj\Debug\net9.0\EmployeeBonusManagementSystem.Api.MvcApplicationPartsAssemblyInfo.cs
+D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\bin\Debug\net9.0\Microsoft.AspNet.Identity.Core.dll
+D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\DevAcademy\Final Project\ProjectLanda\EmployeeBonusManagementSystem.Api\bin\Debug\net9.0\Microsoft.Build.Framework.dll

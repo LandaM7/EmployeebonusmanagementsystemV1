@@ -35,48 +35,7 @@ namespace EmployeeBonusManagement.Application.Services
 			_employeeRepository = employeeRepository;
 		}
 
-		public async Task AddEmployeeAsync(EmployeeDto employeeDto  , string role)
-		{
-			try
-			{
-				var employee = _mapper.Map<EmployeeEntity>(employeeDto);
-
-				var hasher = new PasswordHasher<object>();
-				employee.Password = hasher.HashPassword(null, employeeDto.Password);
-
-
-				//var refreshToken = _jwtService.GenerateRefreshToken();
-				employee.RefreshToken = "";
-
-				await _employeeRepository.AddEmployeeAsync(employee , employeeDto.Role);
-
-				
-				// Assuming role assignment works with integer IDs now
-				//await _roleAssignmentService.AssignRoleToUserAsync(employee.Id.ToString(), "User");
-				//if (employeeDto.Role == Role.Admin.ToString())
-				//{
-				//	await _roleAssignmentService.AssignRoleToUserAsync(employee.Id.ToString(), "Admin");
-				//}
-
-				var saveResult = await _unitOfWork.CompleteAsync();
-				Console.WriteLine($"CompleteAsync result: {saveResult}");
-
-				if (saveResult <= 0)
-				{
-					Console.WriteLine("CompleteAsync returned 0, employee might not have been saved.");
-				}
-				else
-				{
-					Console.WriteLine("Employee added successfully.");
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Error saving employee: {ex.Message}");
-				Console.WriteLine($"Exception details: {ex}");
-			}
-		}
-
+	
 		public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync()
 		{
 			var employees = await _employeeRepository.GetAllEmployeesAsync();

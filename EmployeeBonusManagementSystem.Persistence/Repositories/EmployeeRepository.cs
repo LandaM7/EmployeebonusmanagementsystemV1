@@ -30,6 +30,7 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 
 		public EmployeeRepository(IUnitOfWork unitOfWork)
 		{
+			_unitOfWork = unitOfWork;
 		}
 
 
@@ -48,14 +49,12 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 		}
 
 
-		public async Task AddEmployeeAsync(EmployeeEntity employee, string role)
+		public async Task AddEmployeeAsync(EmployeeEntity employee, string role , IDbTransaction transaction)
 		{
 			if (_unitOfWork.Connection == null)
 				throw new InvalidOperationException("Database connection is not initialized.");
 
-			using (var transaction = _unitOfWork.Connection.BeginTransaction())
-			{
-				try
+			try
 				{
 					var query = @"
                 INSERT INTO Employees (
@@ -72,7 +71,6 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 
 					var employeeId = await _unitOfWork.Connection.QuerySingleAsync<int>(query, employee, transaction);
 
-					// Determine role ID
 					var roleId = role.ToLower() switch
 					{
 						"admin" => 1,
@@ -80,15 +78,13 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 						_ => throw new ArgumentException($"Invalid role: {role}")
 					};
 
-					// Insert role mapping
 					var roleQuery = @"
                 INSERT INTO EmployeeRole (EmployeeId, RoleId)
                 VALUES (@EmployeeId, @RoleId)";
 
 					await _unitOfWork.Connection.ExecuteAsync(roleQuery, new { EmployeeId = employeeId, RoleId = roleId }, transaction);
 
-					// Commit transaction
-					transaction.Commit();
+
 				}
 				catch (Exception ex)
 				{
@@ -96,7 +92,7 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 					Console.WriteLine($"Error adding employee and role: {ex.Message}");
 					throw;
 				}
-			}
+			
 		}
 
 
@@ -192,6 +188,12 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			);
 
 			return roles.ToList();
+		}
+
+
+		public async Task<IEnumerable<EmployeeEntity>> GetEmployeeBonus()
+		{
+
 		}
 	}
 }

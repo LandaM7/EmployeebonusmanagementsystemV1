@@ -9,16 +9,48 @@ using EmployeeBonusManagementSystem.Application;
 using EmployeeBonusManagementSystem.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 
 // Add services to the container.
 var builder = WebApplication.CreateBuilder(args);
-{
+
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(); 
-    builder.Services.AddAutoMapper(typeof(Program));
+
+    builder.Services.AddSwaggerGen(c =>
+    {
+	    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+	    // Enable JWT Authentication in Swagger UI
+	    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	    {
+		    Description = "Enter 'Bearer {token}' (without quotes) in the text box below.",
+		    Name = "Authorization",
+		    In = ParameterLocation.Header,
+		    Type = SecuritySchemeType.Http,
+		    Scheme = "Bearer"
+	    });
+
+	    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+	    {
+		    {
+			    new OpenApiSecurityScheme
+			    {
+				    Reference = new OpenApiReference
+				    {
+					    Type = ReferenceType.SecurityScheme,
+					    Id = "Bearer"
+				    }
+			    },
+			    new string[] {}
+		    }
+	    });
+    });
+
+
+builder.Services.AddAutoMapper(typeof(EmployeeProfile));
 
 
 
@@ -27,25 +59,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 	builder.Services.AddPersistence(builder.Configuration);
     builder.Services.AddApplication();
-     
-
-}
-
-// Configure the HTTP request pipeline.
-var app = builder.Build();
-{
-    //if (app.Environment.IsDevelopment())
-    //{
-    //    app.UseSwagger();
-    //    app.UseSwaggerUI();
-    //}
-
-    app.UseSwagger();
-
-    app.UseSwaggerUI();
-
-    app.UseHttpsRedirection();
-
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	    .AddJwtBearer(options =>
 	    {
@@ -63,8 +76,28 @@ var app = builder.Build();
 
     builder.Services.AddAuthorization();
 
+
+
+
+
+// Configure the HTTP request pipeline.
+var app = builder.Build();
+
+    //if (app.Environment.IsDevelopment())
+    //{
+    //    app.UseSwagger();
+    //    app.UseSwaggerUI();
+    //}
+
+    app.UseSwagger();
+
+    app.UseSwaggerUI();
+
+    app.UseHttpsRedirection();
+
+
 	app.MapControllers();
 
     app.Run();
-}
+
 

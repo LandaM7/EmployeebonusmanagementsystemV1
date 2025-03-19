@@ -3,7 +3,7 @@ using EmployeeBonusManagement.Application.Services.Interfaces;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Queries;
-using EmployeeBonusManagementSystem.Application.Features.Employees.Commands;
+using EmployeeBonusManagementSystem.Application.Features.Employees;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
 using MediatR;
@@ -24,12 +24,14 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 	    }
 
 	    [HttpGet]
-	    public async Task<IActionResult> GetAllEmployees()
+	    [Authorize(Roles = "Admin")]
+		public async Task<IActionResult> GetAllEmployees()
 	    {
+		    var employees = await _mediator.Send(new GetAllEmployeesQuery());
 		    return Ok(employees);
 	    }
 
-	    [HttpPost("addEmployee")]
+		[HttpPost("addEmployee")]
 	    [Authorize(Roles = "Admin")] 
 		public async Task<IActionResult> AddEmployee([FromBody] EmployeeDto employeeDto)
 	    {

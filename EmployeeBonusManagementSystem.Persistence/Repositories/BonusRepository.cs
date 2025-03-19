@@ -57,7 +57,7 @@ public class BonusRepository(
     {
         try
         {
-            await unitOfWork.BeginTransactionAsync();
+            unitOfWork.BeginTransaction();
 
             var result = await sqlQueryRepository.LoadData<AddBonusesDto, dynamic>(
                 "[HRManagementEmployee].[dbo].[AddBonuses]",
@@ -65,13 +65,13 @@ public class BonusRepository(
                 configuration.GetConnectionString("DefaultConnection"),
                 CommandType.StoredProcedure);
 
-            await unitOfWork.CommitAsync();
+            await unitOfWork.CompleteAsync();
             return result.ToList();
 
         }
         catch (Exception ex)
         {
-            await unitOfWork.RollbackAsync();
+	        unitOfWork.Rollback();
             throw new Exception(ex.Message);
     }
 }

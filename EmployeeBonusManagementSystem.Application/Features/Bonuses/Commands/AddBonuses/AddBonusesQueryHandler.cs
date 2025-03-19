@@ -18,18 +18,18 @@ public class AddBonusesQueryHandler(
 
     {
         // თანამშრომლის ნახვა PersonalNumber ით
-        var employee = await employeeRepository.GetByPersonalNumberAsync(request.PersonalNumber);
-        if (employee == null)
-        {
-            throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
-        }
+        //var employee = await employeeRepository.GetByPersonalNumberAsync(request.PersonalNumber);
+        //if (employee == null)
+        //{
+        //    throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
+        //}
 
 
         var mainBonus = new BonusEntity
         {
-            EmployeeId = employee.Id,
+            //EmployeeId = employee.Id,
             Amount = request.BonusAmount,
-            Reason = reason,
+            //Reason = reason,
             CreateDate = DateTime.UtcNow,
             IsRecommenderBonus = false,
             RecommendationLevel = 0,
@@ -42,12 +42,12 @@ public class AddBonusesQueryHandler(
     //        try
     //        {
 
-        await unitOfWork.BeginTransactionAsync();
+        //await unitOfWork.BeginTransactionAsync();
         try
         {
-            await bonusRepository.AddBonusAsync(mainBonus);
-            await bonusRepository.AddRecommenderBonusAsync(employee.Id, request.BonusAmount);
-            await unitOfWork.CommitAsync();
+        //    await bonusRepository.AddBonusAsync(mainBonus);
+        //    await bonusRepository.AddRecommenderBonusAsync(employee.Id, request.BonusAmount);
+        //    await unitOfWork.CommitAsync();
 
             var bonuses = new List<AddBonusesDto>
             {
@@ -66,7 +66,7 @@ public class AddBonusesQueryHandler(
         }
         catch
         {
-            await unitOfWork.RollbackAsync();
+           // await unitOfWork.RollbackAsync();
             throw;
         }
     }

@@ -8,4 +8,4 @@ using MediatR;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Employees.Queries;
 
-public record GetAllEmployeesQuery() : IRequest<List<EmployeeDto>>;
+public record GetAllEmployeesQuery(int EmployeeId) : IRequest<List<EmployeeDto>>;
