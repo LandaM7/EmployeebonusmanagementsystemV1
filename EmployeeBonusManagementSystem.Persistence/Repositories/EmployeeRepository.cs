@@ -4,8 +4,9 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
-
+using System.Data;
 namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 {
 	public class EmployeeRepository : IEmployeeRepository
@@ -18,7 +19,7 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			_connection = connection;
 			_transaction = transaction;
 		}
-
+    }
 		public async Task<bool> ExistsByPersonalNumberAsync(string personalNumber)
 		{
 			var query = "SELECT COUNT(1) FROM Employees WHERE PersonalNumber = @PersonalNumber";
