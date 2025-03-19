@@ -37,41 +37,33 @@ public class AddBonusesQueryHandler(
         };
         //int adminUserId = currentUserService.GetUserId(); ეს JWT
 
-        using (var transaction = await unitOfWork.BeginTransactionAsync())
+
+        await unitOfWork.BeginTransactionAsync();
+        try
         {
-            try
+            await bonusRepository.AddBonusAsync(mainBonus);
+            await bonusRepository.AddRecommenderBonusAsync(employee.Id, request.BonusAmount);
+            await unitOfWork.CommitAsync();
+
+            var bonuses = new List<AddBonusesDto>
             {
-
-                await bonusRepository.AddBonusAsync(mainBonus);
-                await bonusRepository.AddRecommenderBonusAsync(employee.Id, request.BonusAmount);
-                await unitOfWork.CommitAsync();
-
-                var bonuses = new List<AddBonusesDto>
+                new()
                 {
-                    new()
-                    {
-                        EmployeeId = mainBonus.EmployeeId,
-                        Amount = mainBonus.Amount,
-                        Reason = mainBonus.Reason,
-                        CreateDate = mainBonus.CreateDate,
-                        RecommendationLevel = mainBonus.RecommendationLevel,
-                        IsRecommenderBonus = mainBonus.IsRecommenderBonus,
-                        CreateByUserId = mainBonus.CreateByUserId
-                    }
-                };
+                    EmployeeId = mainBonus.EmployeeId,
+                    Amount = mainBonus.Amount,
+                    Reason = mainBonus.Reason,
+                    CreateDate = mainBonus.CreateDate,
+                    RecommendationLevel = mainBonus.RecommendationLevel,
+                    IsRecommenderBonus = mainBonus.IsRecommenderBonus
+                }
+            };
 
-                return bonuses;
-            }
-            catch
-            {
-                await unitOfWork.RollbackAsync();
-                throw;
-            }
+            return bonuses;
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync();
+            throw;
         }
     }
 }
-
-
-
-
-

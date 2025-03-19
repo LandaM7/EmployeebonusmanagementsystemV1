@@ -24,7 +24,7 @@ public static class PersistenceDI
         services.AddScoped<IBonusRepository, BonusRepository>();
         services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
         services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
-
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
 
     }

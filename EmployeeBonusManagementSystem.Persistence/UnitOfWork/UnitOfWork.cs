@@ -1,6 +1,7 @@
-﻿namespace EmployeeBonusManagementSystem.Persistence.UnitOfWork;
+﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
-public class UnitOfWork
+namespace EmployeeBonusManagementSystem.Persistence;
+public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
 
