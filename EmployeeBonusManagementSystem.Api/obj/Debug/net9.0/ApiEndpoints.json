@@ -1,0 +1,28 @@
+[
+  {
+    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
+    "Method": "GetAllEmployees",
+    "RelativePath": "api/employees",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
+    "Method": "AddEmployee",
+    "RelativePath": "api/employees/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "employee",
+        "Type": "EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee.EmployeeDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

@@ -3,7 +3,9 @@ using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 using EmployeeBonusManagementSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Persistence.Repositories;
 
@@ -71,7 +73,7 @@ public class BonusRepository(
         {
             await unitOfWork.RollbackAsync();
             throw new Exception(ex.Message);
-        }
     }
+}
 
 }

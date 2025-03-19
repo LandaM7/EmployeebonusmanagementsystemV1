@@ -2,8 +2,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using EmployeeBonusManagement.Application.Services.Interfaces;
+using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
+using EmployeeBonusManagementSystem.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,8 +20,9 @@ namespace EmployeeBonusManagement.Application.Services
 	public class AuthService : IAuthService
 	{
 
-		//private readonly IEmployeeRepository<EmployeeEntity> _employeeRepository; // Change to ApplicationUser
-		//private readonly IJwtService _jwtService;
+		private readonly IEmployeeRepository _employeeRepository;
+		private readonly IJwtService _jwtService;
+		private readonly IUnitOfWork _unitOfWork;
 
 		//public AuthService(IEmployeeRepository<EmployeeEntity> employeeRepository, IJwtService jwtService)
 		//{
@@ -24,44 +30,42 @@ namespace EmployeeBonusManagement.Application.Services
 		//	_jwtService = jwtService;
 		//}
 
-		//public async Task<AuthResponse> LoginAsync(LoginDto loginDto)
-		//{
-		//	Console.WriteLine($"Attempting login for email: {loginDto.Email}");
-		//	var user = await _employeeRepository.GetUserByEmailAsync(loginDto.Email.ToLower());
-		//	if (user == null)
-		//	{
-		//		Console.WriteLine("User not found");
-		//		return new AuthResponse(false) { Success = false };
-		//	}
+		public AuthService(IEmployeeRepository employeeRepository, IUnitOfWork unitOfWork , IJwtService jwtService)
+		{
+			_employeeRepository = employeeRepository;
 
-		//	Console.WriteLine("User Found");
+			_unitOfWork = unitOfWork;
 
-		//	if (!await _employeeRepository.CheckPasswordAsync(user, loginDto.Password))
-		//	{
-		//		Console.WriteLine("Incorrect password");
-		//		return new AuthResponse(false) { Success = false };
-		//	}
+			_jwtService = jwtService;
+		}
 
-		//	Console.WriteLine("Password Correct");
+		public async Task<AuthResponse> LoginAsync(LoginDto loginDto)
+		{
 
-		//	var roles = await _employeeRepository.GetUserRolesAsync(user);
-		//	var token = _jwtService.GenerateToken(user, roles);
+			_unitOfWork.BeginTransaction(); // Ensure a transaction is started
 
-		//	if (token == null || string.IsNullOrEmpty(token.AccessToken))
-		//	{
-		//		Console.WriteLine("Token generation failed");
-		//	}
+			var user = await _employeeRepository.GetByEmailAsync(loginDto.Email.ToLower());
 
-		//	return new AuthResponse(true)
-		//	{
-		//		AccessToken = token.AccessToken,
-		//		RefreshToken = token.RefreshToken,
-		//		Expiration = token.Expiration,
-		//		UserEmail = user.Email,
-		//		Roles = roles.ToList(),
-		//		Success = true
-		//	};
-		//}
+			if (user == null)
+			{
+				Console.WriteLine("User not found.");
+				_unitOfWork.Rollback(); // Rollback if user is not found
+				return new AuthResponse { Success = false };
+			}
+
+			if (!await _employeeRepository.CheckPasswordAsync(user, loginDto.Password))
+			{
+				Console.WriteLine("Invalid password.");
+				_unitOfWork.Rollback();
+				return new AuthResponse { Success = false };
+			}
+
+			var roles = await _employeeRepository.GetUserRolesAsync(user.Id);
+			var response = _jwtService.GenerateToken(user, roles);
+
+			_unitOfWork.Commit(); // Commit transaction if successful
+			return response;
+		}
 	}
-
 }
+

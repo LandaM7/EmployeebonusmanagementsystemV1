@@ -9,6 +9,7 @@ using EmployeeBonusManagementSystem.Domain.Entities;
 using EmployeeBonusManagementSystem.Persistence;
 using Org.BouncyCastle.Crypto.Generators;
 using Microsoft.AspNetCore.Identity;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
 
 namespace EmployeeBonusManagement.Application.Services
 {
@@ -34,7 +35,7 @@ namespace EmployeeBonusManagement.Application.Services
 			_employeeRepository = employeeRepository;
 		}
 
-		public async Task AddEmployeeAsync(EmployeeDto employeeDto)
+		public async Task AddEmployeeAsync(EmployeeDto employeeDto  , string role)
 		{
 			try
 			{
@@ -47,8 +48,9 @@ namespace EmployeeBonusManagement.Application.Services
 				//var refreshToken = _jwtService.GenerateRefreshToken();
 				employee.RefreshToken = "";
 
-				await _employeeRepository.AddEmployeeAsync(employee);
+				await _employeeRepository.AddEmployeeAsync(employee , employeeDto.Role);
 
+				
 				// Assuming role assignment works with integer IDs now
 				//await _roleAssignmentService.AssignRoleToUserAsync(employee.Id.ToString(), "User");
 				//if (employeeDto.Role == Role.Admin.ToString())
@@ -77,7 +79,7 @@ namespace EmployeeBonusManagement.Application.Services
 
 		public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync()
 		{
-			var employees = await _employeeRepository.GetAllAsync();
+			var employees = await _employeeRepository.GetAllEmployeesAsync();
 			return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 		}
 

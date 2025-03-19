@@ -9,34 +9,64 @@ using Microsoft.Extensions.Configuration;
 
 namespace EmployeeBonusManagementSystem.Persistence
 {
-	public class UnitOfWork : IUnitOfWork, IDisposable
+	public class UnitOfWork : IUnitOfWork
 	{
-		private readonly IDbConnection _connection;
-		private readonly IDbTransaction _transaction;
+		private readonly IDbConnectionFactory _connectionFactory;
+		private IDbConnection _connection;
+		private IDbTransaction _transaction;
 		private bool _disposed;
 
-		private IEmployeeRepository _employeeRepository;
-
-		public IEmployeeRepository EmployeeRepository =>
-			_employeeRepository ??= new EmployeeRepository(_connection, _transaction);
-
-		public UnitOfWork(IConfiguration configuration)
+		public UnitOfWork(IDbConnectionFactory connectionFactory)
 		{
+			_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+			_connection = _connectionFactory.CreateConnection();
+			_connection.Open();
+		}
+
+		public IDbConnection Connection => _connection;
+
+
+		public IDbTransaction BeginTransaction()
+		{
+			if (_transaction == null)
+			{
 			_connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
 			_connection.Open();
-			_transaction = _connection.BeginTransaction();
+				_transaction = _connection.BeginTransaction();
+			}
+			return _transaction;
+		}
+
+		public void Commit()
+		{
+			if (_transaction == null)
+				throw new InvalidOperationException("No active transaction.");
+
+			_transaction.Commit();
+			_transaction.Dispose();
+			_transaction = null; // Reset transaction
+		}
+
+		public void Rollback()
+		{
+			if (_transaction == null)
+				throw new InvalidOperationException("No active transaction.");
+
+			_transaction.Rollback();
+			_transaction.Dispose();
+			_transaction = null; // Reset transaction
 		}
 
 		public async Task<int> CompleteAsync()
 		{
 			try
 			{
-				await Task.Run(() => _transaction.Commit());
+				Commit();
 				return 1; // Success
 			}
-			catch
+			catch (Exception)
 			{
-				_transaction.Rollback();
+				Rollback();
 				return 0; // Failure
 			}
 			finally
@@ -47,16 +77,18 @@ namespace EmployeeBonusManagementSystem.Persistence
 
 		public void Dispose()
 		{
-			if (_disposed)
-				return;
-
-			_transaction?.Dispose();
-			if (_connection?.State == ConnectionState.Open)
+			if (!_disposed)
 			{
-				_connection.Close();
+				_transaction?.Dispose();
+				if (_connection?.State == ConnectionState.Open)
+				{
+					_connection.Close();
+				}
+
+				_connection?.Dispose();
+				_disposed = true;
 			}
-			_connection?.Dispose();
-			_disposed = true;
 		}
+
 	}
 }

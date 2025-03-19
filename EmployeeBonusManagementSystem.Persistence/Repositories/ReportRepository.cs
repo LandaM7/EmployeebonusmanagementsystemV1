@@ -6,7 +6,10 @@ using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTota
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalBonusesByDepartment;
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalSalariesByDepartment;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Infrastructure.Repositories
 {

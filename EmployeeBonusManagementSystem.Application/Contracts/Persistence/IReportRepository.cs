@@ -3,6 +3,9 @@ using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTenR
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalBonuses;
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalBonusesByDepartment;
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalSalariesByDepartment;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 public interface IReportRepository

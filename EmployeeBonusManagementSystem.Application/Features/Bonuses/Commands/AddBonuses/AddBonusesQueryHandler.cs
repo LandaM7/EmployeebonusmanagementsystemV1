@@ -1,5 +1,6 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Domain.Entities;
+using EmployeeBonusManagementSystem.Persistence;
 using MediatR;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
@@ -23,7 +24,6 @@ public class AddBonusesQueryHandler(
             throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
         }
 
-        var reason = $"{DateTime.UtcNow:MMMM} თვის ბონუსის ჩარიცხვა";
 
         var mainBonus = new BonusEntity
         {
@@ -37,6 +37,10 @@ public class AddBonusesQueryHandler(
         };
         //int adminUserId = currentUserService.GetUserId(); ეს JWT
 
+    //    using (var transaction = await unitOfWork.BeginTransactionAsync())
+    //    {
+    //        try
+    //        {
 
         await unitOfWork.BeginTransactionAsync();
         try
@@ -55,7 +59,7 @@ public class AddBonusesQueryHandler(
                     CreateDate = mainBonus.CreateDate,
                     RecommendationLevel = mainBonus.RecommendationLevel,
                     IsRecommenderBonus = mainBonus.IsRecommenderBonus
-                }
+    }
             };
 
             return bonuses;

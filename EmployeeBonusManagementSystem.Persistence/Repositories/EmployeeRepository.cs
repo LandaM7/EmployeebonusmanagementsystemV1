@@ -7,19 +7,32 @@ using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
 using System.Data;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System;
+using Microsoft.Data.SqlClient;
+
+using Microsoft.AspNetCore.Identity;
+
 namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 {
 	public class EmployeeRepository : IEmployeeRepository
 	{
 		private readonly IDbConnection _connection;
-		private readonly IDbTransaction _transaction;
+		private  IDbTransaction _transaction;
+		private readonly PasswordHasher<EmployeeEntity> _passwordHasher = new PasswordHasher<EmployeeEntity>();
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly IDbConnectionFactory _connectionFactory;
 
-		public EmployeeRepository(IDbConnection connection, IDbTransaction transaction)
+
+
+
+		public EmployeeRepository(IUnitOfWork unitOfWork)
 		{
-			_connection = connection;
-			_transaction = transaction;
 		}
-    }
+
+
 		public async Task<bool> ExistsByPersonalNumberAsync(string personalNumber)
 		{
 			var query = "SELECT COUNT(1) FROM Employees WHERE PersonalNumber = @PersonalNumber";
@@ -34,13 +47,58 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			return count > 0;
 		}
 
-		public async Task AddEmployeeAsync(EmployeeEntity employee)
+
+		public async Task AddEmployeeAsync(EmployeeEntity employee, string role)
 		{
-			var query = @"
-                INSERT INTO Employees (FirstName, LastName, PersonalNumber, BirthDate, Email, Password, Salary, HireDate, DepartmentId, RecommenderEmployeeId, IsActive, IsPasswordChanged, PasswordChangeDate)
-                VALUES (@FirstName, @LastName, @PersonalNumber, @BirthDate, @Email, @Password, @Salary, @HireDate, @DepartmentId, @RecommenderEmployeeId, @IsActive, @IsPasswordChanged, @PasswordChangeDate)";
-			await _connection.ExecuteAsync(query, employee, _transaction);
+			if (_unitOfWork.Connection == null)
+				throw new InvalidOperationException("Database connection is not initialized.");
+
+			using (var transaction = _unitOfWork.Connection.BeginTransaction())
+			{
+				try
+				{
+					var query = @"
+                INSERT INTO Employees (
+                    FirstName, LastName, PersonalNumber, BirthDate, Email, Password, Salary, HireDate, 
+                    UserName, DepartmentId, RecommenderEmployeeId, IsActive, IsPasswordChanged, 
+                    PasswordChangeDate, CreateByUserId, RefreshToken, CreateDate
+                )
+                VALUES (
+                    @FirstName, @LastName, @PersonalNumber, @BirthDate, @Email, @Password, @Salary, @HireDate, 
+                    @UserName, @DepartmentId, @RecommenderEmployeeId, @IsActive, @IsPasswordChanged, 
+                    @PasswordChangeDate, @CreateByUserId, @RefreshToken, @CreateDate
+                );
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+					var employeeId = await _unitOfWork.Connection.QuerySingleAsync<int>(query, employee, transaction);
+
+					// Determine role ID
+					var roleId = role.ToLower() switch
+					{
+						"admin" => 1,
+						"user" => 2,
+						_ => throw new ArgumentException($"Invalid role: {role}")
+					};
+
+					// Insert role mapping
+					var roleQuery = @"
+                INSERT INTO EmployeeRole (EmployeeId, RoleId)
+                VALUES (@EmployeeId, @RoleId)";
+
+					await _unitOfWork.Connection.ExecuteAsync(roleQuery, new { EmployeeId = employeeId, RoleId = roleId }, transaction);
+
+					// Commit transaction
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					transaction.Rollback();
+					Console.WriteLine($"Error adding employee and role: {ex.Message}");
+					throw;
+				}
+			}
 		}
+
 
 		public async Task<EmployeeEntity> GetByIdAsync(int id)
 		{
@@ -48,10 +106,34 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			return await _connection.QueryFirstOrDefaultAsync<EmployeeEntity>(query, new { Id = id }, _transaction);
 		}
 
-		public async Task<IEnumerable<EmployeeEntity>> GetAllAsync()
+		public async Task<EmployeeEntity> GetByEmailAsync(string email)
+		{
+
+			if (_transaction == null)
+			{
+				_transaction = _unitOfWork.BeginTransaction();
+			}
+
+			Console.WriteLine($"Connection is null: {_unitOfWork.Connection == null}");
+			Console.WriteLine($"Transaction is null: {_transaction == null}");
+
+			if (_unitOfWork?.Connection == null)
+			{
+				throw new InvalidOperationException("Database connection is not initialized.");
+			}
+
+		
+
+			var query = "SELECT * FROM Employees WHERE Email = @Email";
+
+			return await _unitOfWork.Connection.QueryFirstOrDefaultAsync<EmployeeEntity>(
+				query, new { Email = email }, _transaction);
+		}
+
+		public async Task<IEnumerable<EmployeeEntity>> GetAllEmployeesAsync()
 		{
 			var query = "SELECT * FROM Employees";
-			return await _connection.QueryAsync<EmployeeEntity>(query, transaction: _transaction);
+			return await _unitOfWork.Connection.QueryAsync<EmployeeEntity>(query, transaction: _transaction);
 		}
 
 		public async Task UpdateAsync(EmployeeEntity employee)
@@ -67,5 +149,50 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			var query = "DELETE FROM Employees WHERE Id = @Id";
 			await _connection.ExecuteAsync(query, new { Id = employee.Id }, _transaction);
 		}
+
+		public async Task<bool> CheckPasswordAsync(EmployeeEntity user, string enteredPassword)
+		{
+			if (user == null || string.IsNullOrEmpty(user.Password))
+			{
+				return false;
+			}
+
+			var hasher = new PasswordHasher<EmployeeEntity>(); // Use the correct generic type
+			var result = hasher.VerifyHashedPassword(user, user.Password, enteredPassword);
+			Console.WriteLine($"{result}");
+
+			if (result == PasswordVerificationResult.SuccessRehashNeeded)
+			{
+				// The password is correct, but needs rehashing
+				// Rehash and update the password
+				var newHashedPassword = hasher.HashPassword(user, enteredPassword);
+				user.Password = newHashedPassword;
+
+				//await _employeeRepository.UpdatePasswordAsync(user);
+
+				return true; // Password is correct, and we've rehashed it
+			}
+
+			return result == PasswordVerificationResult.Success;
+		}
+
+		public async Task<List<string>> GetUserRolesAsync(int employeeId)
+		{
+			string sql = @"
+            SELECT r.RoleName
+			FROM EmployeeRole er
+			INNER JOIN Roles r ON er.RoleId = r.RoleId
+			WHERE er.EmployeeId =  @EmployeeId";
+
+			// Execute the query using Dapper
+			var roles = await _unitOfWork.Connection.QueryAsync<string>(
+				sql,
+				new { EmployeeId = employeeId },
+				_unitOfWork.BeginTransaction() // Pass the transaction here
+			);
+
+			return roles.ToList();
+		}
 	}
 }
+

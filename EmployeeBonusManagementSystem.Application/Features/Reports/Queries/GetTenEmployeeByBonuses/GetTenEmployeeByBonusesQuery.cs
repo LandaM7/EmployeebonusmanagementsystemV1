@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using System;
+using System.Collections.Generic;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTenEmployeeByBonuses;
 

@@ -1,6 +1,10 @@
-﻿namespace EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployeeRegistration
+﻿using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
+using MediatR;
+
+namespace EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee
 {
-    internal class AddEmployeeCommand
-    {
-    }
+	    {
+		    EmployeeDto = employeeDto;
+	    }
+	}
 }

@@ -5,6 +5,8 @@ using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTota
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalBonusesByDepartment;
 using EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTotalSalariesByDepartment;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+
 
 namespace EmployeeBonusManagementSystem.Api.Controllers
 {

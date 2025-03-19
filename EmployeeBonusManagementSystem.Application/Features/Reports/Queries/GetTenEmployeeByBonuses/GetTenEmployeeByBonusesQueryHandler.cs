@@ -1,6 +1,9 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
 using MediatR;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Reports.Queries.GetTenEmployeeByBonuses;
 

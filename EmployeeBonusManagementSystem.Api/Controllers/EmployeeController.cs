@@ -1,6 +1,13 @@
 ﻿using EmployeeBonusManagement.Application.Services;
 using EmployeeBonusManagement.Application.Services.Interfaces;
+using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Queries;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Commands;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeBonusManagementSystem.Api.Controllers
@@ -9,47 +16,42 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
     [Route("api/employees")]
     public class EmployeeController : ControllerBase
     {
-	    private readonly IEmployeeService<EmployeeDto> _employeeService;
+	    private readonly IMediator _mediator;
 
-		public EmployeeController(IEmployeeService<EmployeeDto> employeeService)
-        {
-            _employeeService = employeeService;
-        }
+	    public EmployeeController(IMediator mediator)
+	    {
+		    _mediator = mediator;
+	    }
 
+	    [HttpGet]
+	    public async Task<IActionResult> GetAllEmployees()
+	    {
+		    return Ok(employees);
+	    }
 
-		//[HttpPost("Register")]
-		//public async Task<IActionResult> RegisterEmployee([FromBody] EmployeeDto employeeDto)
-		//{
-		//    if (employeeDto == null)
-		//        return BadRequest("Invalid employee data.");
+	    [HttpPost("addEmployee")]
+	    [Authorize(Roles = "Admin")] 
+		public async Task<IActionResult> AddEmployee([FromBody] EmployeeDto employeeDto)
+	    {
+		    var result = await _mediator.Send(new AddEmployeeCommand(employeeDto));
 
-		//    try
-		//    {
-		//        bool isRegistered = await _employeeService.RegisterEmployeeAsync(employeeDto);
-		//        if (!isRegistered)
-		//            return BadRequest("Employee registration failed.");
+		    if (result)
+		    {
+			    return Ok(new { message = "Employee added successfully" });
+		    }
+		    return BadRequest(new { message = "Failed to add employee" });
+	    }
 
-		//        return Ok(new { message = "Employee registered successfully!" });
-		//    }
-		//    catch (Exception ex)
-		//    {
-		//        return StatusCode(500, new { error = ex.Message });
-		//    }
-		//}
+	    [HttpPost("login")]
+	    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+	    {
+		    var result = await _mediator.Send(new LoginCommand(loginDto));
 
-		[HttpGet]
-		public async Task<IActionResult> GetAllEmployees()
-		{
-			var employees = await _employeeService.GetAllEmployeesAsync();
-			return Ok(employees);
-		}
+		    if (result.Success)
+			    return Ok(result);
 
-		[HttpPost("add")]
-		public async Task<IActionResult> AddEmployee([FromBody] EmployeeDto employee)
-		{
-			await _employeeService.AddEmployeeAsync(employee);
-			return Ok("Employee added successfully!");
-		}
+		    return Unauthorized(new { message = "Invalid credentials" });
+	    }
 
 
 	}

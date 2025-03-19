@@ -1,4 +1,5 @@
 ﻿using EmployeeBonusManagementSystem.Domain.Common;
+using System;
 
 namespace EmployeeBonusManagementSystem.Domain.Entities;
 

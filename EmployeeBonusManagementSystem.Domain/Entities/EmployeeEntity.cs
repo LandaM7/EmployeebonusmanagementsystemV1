@@ -1,4 +1,5 @@
 ﻿using EmployeeBonusManagementSystem.Domain.Common;
+using System;
 
 namespace EmployeeBonusManagementSystem.Domain.Entities;
 
@@ -16,7 +17,7 @@ public class EmployeeEntity : BaseEntity
     public bool IsPasswordChanged { get; set; }
     public DateTime PasswordChangeDate { get; set; }
     public int DepartmentId { get; set; }
-    public int RecommenderEmployeeId { get; set; }
+    public int? RecommenderEmployeeId { get; set; }
     public bool IsActive { get; set; }
     public int CreateByUserId { get; set; }
     public DateTime CreateDate { get; set; }
