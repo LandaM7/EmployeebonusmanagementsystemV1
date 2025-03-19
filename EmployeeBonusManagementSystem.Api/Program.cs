@@ -1,9 +1,11 @@
-﻿using EmployeeBonusManagementSystem.Application.Features.Employees.Commands;
+﻿using System.Text;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Commands;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
 using EmployeeBonusManagementSystem.Application.Mapping;
-using EmployeeBonusManagementSystem.Domain.Entities;
-using EmployeeBonusManagementSystem.Persistence;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 
 // Add services to the container.
@@ -39,9 +41,22 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
-	app.UseAuthentication();
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	    .AddJwtBearer(options =>
+	    {
+		    options.TokenValidationParameters = new TokenValidationParameters
+		    {
+			    ValidateIssuer = true,
+			    ValidateAudience = true,
+			    ValidateLifetime = true,
+			    ValidateIssuerSigningKey = true,
+			    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+			    ValidAudience = builder.Configuration["Jwt:Audience"],
+			    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+		    };
+	    });
 
-	app.UseAuthorization();
+    builder.Services.AddAuthorization();
 
 	app.MapControllers();
 

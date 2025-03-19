@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmployeeBonusManagementSystem.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+265f2271c9192ad1b39e716a1c141166213a20bf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d091193f40d553befbe047c060b7eae268cd5d15")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmployeeBonusManagementSystem.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmployeeBonusManagementSystem.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

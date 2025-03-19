@@ -7,6 +7,7 @@ using EmployeeBonusManagementSystem.Application.Features.Employees.Commands;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeBonusManagementSystem.Api.Controllers
@@ -30,6 +31,7 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 	    }
 
 	    [HttpPost("addEmployee")]
+	    [Authorize(Roles = "Admin")] 
 		public async Task<IActionResult> AddEmployee([FromBody] EmployeeDto employeeDto)
 	    {
 		    var result = await _mediator.Send(new AddEmployeeCommand(employeeDto));
