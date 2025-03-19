@@ -1,4 +1,6 @@
-﻿using EmployeeBonusManagementSystem.Persistence;
+﻿using EmployeeBonusManagementSystem.Domain.Entities;
+using EmployeeBonusManagementSystem.Persistence;
+using Microsoft.AspNetCore.Identity;
 
 
 // Add services to the container.
@@ -8,10 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.AddAutoMapper(typeof(Program));
 
-    builder.Services.AddPersistence(builder.Configuration);
 
-
+	builder.Services.AddPersistence(builder.Configuration);
+     
 }
 
 // Configure the HTTP request pipeline.
@@ -29,9 +32,11 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
-    app.UseAuthorization();
+	app.UseAuthentication();
 
-    app.MapControllers();
+	app.UseAuthorization();
+
+	app.MapControllers();
 
     app.Run();
 }

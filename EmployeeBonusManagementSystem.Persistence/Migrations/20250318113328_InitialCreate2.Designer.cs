@@ -4,6 +4,7 @@ using EmployeeBonusManagementSystem.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeBonusManagementSystem.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318113328_InitialCreate2")]
+    partial class InitialCreate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,10 +88,6 @@ namespace EmployeeBonusManagementSystem.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreateByUserId");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Bonuses", (string)null);
                 });
@@ -211,10 +210,6 @@ namespace EmployeeBonusManagementSystem.Persistence.Migrations
                     b.Property<int>("RecommenderEmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,2)");
 
@@ -298,21 +293,6 @@ namespace EmployeeBonusManagementSystem.Persistence.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Roles", (string)null);
-                });
-
-            modelBuilder.Entity("EmployeeBonusManagementSystem.Domain.Entities.BonusEntity", b =>
-                {
-                    b.HasOne("EmployeeBonusManagementSystem.Domain.Entities.EmployeeEntity", null)
-                        .WithMany()
-                        .HasForeignKey("CreateByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EmployeeBonusManagementSystem.Domain.Entities.EmployeeEntity", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("EmployeeBonusManagementSystem.Domain.Entities.DepartmentEntity", b =>

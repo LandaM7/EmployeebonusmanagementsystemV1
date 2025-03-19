@@ -12,6 +12,9 @@ public class BonusEntityConfiguration : IEntityTypeConfiguration<BonusEntity>
 
         builder.HasKey(b => b.Id);
 
+        builder.Property(b => b.EmployeeId)
+	        .IsRequired();
+
         builder.Property(b => b.Amount)
             .HasColumnType("decimal(18,2)")
             .IsRequired();
@@ -30,6 +33,14 @@ public class BonusEntityConfiguration : IEntityTypeConfiguration<BonusEntity>
 
         builder.Property(b => b.RecommendationLevel)
             .IsRequired();
-    }
+        builder.HasOne<EmployeeEntity>()
+	        .WithMany()
+	        .HasForeignKey(e => e.CreateByUserId)
+	        .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne<EmployeeEntity>()
+	        .WithMany()
+	        .HasForeignKey(e => e.EmployeeId)
+	        .OnDelete(DeleteBehavior.Restrict);
+	}
 }
 

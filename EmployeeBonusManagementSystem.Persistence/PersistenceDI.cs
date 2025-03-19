@@ -1,4 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using EmployeeBonusManagement.Application.Services;
+using EmployeeBonusManagement.Application.Services.Interfaces;
+using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
+using EmployeeBonusManagementSystem.Domain.Entities;
+using EmployeeBonusManagementSystem.Infrastructure.Repositories;
+using EmployeeBonusManagementSystem.Persistence.Repositories.Implementations;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +23,31 @@ public static class PersistenceDI
         // DB კონტექსტის დამატება 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        services.AddScoped<IDbConnection>(provider =>
+        {
+	        return new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        });
+		services.AddScoped<IDbTransaction>(provider =>
+        {
+	        var connection = provider.GetRequiredService<IDbConnection>();
+	        connection.Open();
+	        return connection.BeginTransaction();
+        });
+		services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
-        return services;
+		
+
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IEmployeeService<EmployeeDto>, ManageEmployeesService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
+
+		services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<RoleAssignmentService>();
+
+
+
+		return services;
 
     }
 }

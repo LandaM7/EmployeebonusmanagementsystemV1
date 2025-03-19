@@ -1,4 +1,6 @@
-﻿namespace EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee
+﻿using EmployeeBonusManagementSystem.Domain.Entities;
+
+namespace EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee
 {
     public class EmployeeDto
     {
@@ -12,5 +14,6 @@
         public DateTime HireDate { get; set; }
         public int DepartmentId { get; set; }
         public int? RecommenderEmployeeId { get; set; }
+        public String Role { get; set; }
     }
 }

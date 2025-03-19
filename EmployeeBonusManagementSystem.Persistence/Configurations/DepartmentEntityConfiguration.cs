@@ -24,5 +24,10 @@ public class DepartmentEntityConfiguration : IEntityTypeConfiguration<Department
 
         builder.Property(d => d.CreateByUserId)
             .IsRequired();
-    }
+
+        builder.HasOne<EmployeeEntity>()
+	        .WithMany()
+	        .HasForeignKey(e => e.CreateByUserId)
+	        .OnDelete(DeleteBehavior.Restrict);
+	}
 }

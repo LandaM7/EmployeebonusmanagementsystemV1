@@ -53,5 +53,16 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEnti
             .WithMany()
             .HasForeignKey(e => e.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
-    }
+
+		builder.HasOne<EmployeeEntity>()
+			.WithMany() 
+			.HasForeignKey(e => e.RecommenderEmployeeId) 
+			.OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasOne<EmployeeEntity>()
+			.WithMany() 
+			.HasForeignKey(e => e.CreateByUserId) 
+			.OnDelete(DeleteBehavior.Restrict);
+
+	}
 }

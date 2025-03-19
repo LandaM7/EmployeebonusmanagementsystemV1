@@ -21,4 +21,7 @@ public class EmployeeEntity : BaseEntity
     public int CreateByUserId { get; set; }
     public DateTime CreateDate { get; set; }
 
+    //
+    public string RefreshToken { get; set; }
+
 }
