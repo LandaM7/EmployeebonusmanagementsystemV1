@@ -1,8 +1,6 @@
-﻿using EmployeeBonusManagementSystem.Domain.Common;
+﻿namespace EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 
-namespace EmployeeBonusManagementSystem.Domain.Entities;
-
-public class BonusEntity : BaseEntity
+public class AddBonusesDto
 {
     public int EmployeeId { get; set; }
     public decimal Amount { get; set; }
@@ -11,5 +9,5 @@ public class BonusEntity : BaseEntity
     public string Reason { get; set; } = string.Empty;
     public DateTime CreateDate { get; set; }
     public int CreateByUserId { get; set; }
-
 }
+

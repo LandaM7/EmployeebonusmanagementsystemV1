@@ -1,56 +1,40 @@
-﻿using Dapper;
-using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace EmployeeBonusManagementSystem.Infrastructure.Repositories;
-
-public class EmployeeRepository : IEmployeeRepository
+namespace EmployeeBonusManagementSystem.Infrastructure.Repositories
 {
-    private readonly IConfiguration _configuration;
-
-    public EmployeeRepository(IConfiguration configuration)
+    public class EmployeeRepository(
+        ISqlQueryRepository sqlQueryRepository,
+        IConfiguration configuration)
+        : IEmployeeRepository
     {
-        _configuration = configuration;
-    }
 
-    private IDbConnection CreateConnection()
-    {
-        return new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-    }
+        public async Task<EmployeeEntity?> GetByPersonalNumberAsync(string personalNumber)
+        {
+            try
+            {
+                var query = @"
+                    SELECT 
+                        Id AS EmployeeId 
+                    FROM
+                        [HRManagementEmployee].[dbo].[Employees](NOLOCK)
+                    WHERE
+                        PersonalNumber = @PersonalNumber;
+                ";
 
-    public async Task<bool> ExistsByPersonalNumberAsync(string personalNumber)
-    {
-        using var connection = CreateConnection();
-        var query = "SELECT COUNT(1) FROM Employees WHERE PersonalNumber = @PersonalNumber";
-        var count = await connection.ExecuteScalarAsync<int>(query, new { PersonalNumber = personalNumber });
-
-        return count > 0;
-    }
-
-    public async Task<bool> ExistsByEmailAsync(string email)
-    {
-        using var connection = CreateConnection();
-        var query = "SELECT COUNT(1) FROM Employees WHERE Email = @Email";
-        var count = await connection.ExecuteScalarAsync<int>(query, new { Email = email });
-
-        return count > 0;
-    }
-
-    public async Task AddEmployeeAsync(EmployeeEntity employee)
-    {
-        using var connection = CreateConnection();
-        var query = @"
-                INSERT INTO Employees 
-                (FirstName, LastName, PersonalNumber, BirthDate, Email, Password, Salary, HireDate, DepartmentId,
-                  RecommenderEmployeeId, IsActive, IsPasswordChanged, PasswordChangeDate)
-                VALUES 
-                (@FirstName, @LastName, @PersonalNumber, @BirthDate, @Email, @Password, @Salary, @HireDate, @DepartmentId, 
-                  @RecommenderEmployeeId, @IsActive, @IsPasswordChanged, @PasswordChangeDate)";
-
-        await connection.ExecuteAsync(query, employee);
+                return await sqlQueryRepository.LoadDataFirstOrDefault<EmployeeEntity, dynamic>(
+                    query,
+                    new { PersonalNumber = personalNumber },
+                    configuration.GetConnectionString("DefaultConnection"),
+                    CommandType.Text);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
-

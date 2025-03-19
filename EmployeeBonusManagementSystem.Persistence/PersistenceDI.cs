@@ -1,4 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
+using EmployeeBonusManagementSystem.Infrastructure.Repositories;
+using EmployeeBonusManagementSystem.Persistence.Repositories;
+using EmployeeBonusManagementSystem.Persistence.Repositories.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +18,12 @@ public static class PersistenceDI
         // DB კონტექსტის დამატება 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IBonusRepository, BonusRepository>();
+        services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
+        services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
 
         return services;
 

@@ -11,6 +11,3 @@ public static class InfrastructureDI
         return services;
     }
 }
-
-
-

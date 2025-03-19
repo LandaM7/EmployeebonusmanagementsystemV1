@@ -40,6 +40,6 @@ internal class SqlQueryRepository(
             param: parameters,
             commandType: commandType);
     }
-
-
 }
+
+
