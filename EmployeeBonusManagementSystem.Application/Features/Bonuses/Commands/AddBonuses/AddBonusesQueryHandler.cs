@@ -41,7 +41,6 @@ public class AddBonusesQueryHandler(
             //int adminUserId = currentUserService.GetUserId(); ეს JWT
 
             await unitOfWork.BonusRepository.AddBonusAsync(mainBonus);
-            await unitOfWork.BonusRepository.AddRecommenderBonusAsync(employeeExists.Item2, request.BonusAmount);
             await unitOfWork.CommitAsync();
 
             var bonuses = new List<AddBonusesDto>

@@ -13,4 +13,5 @@ public interface IUnitOfWork
     Task RollbackAsync();
     Task CloseAsync();
     Task OpenAsync();
+    Task GetTransaction();
 }

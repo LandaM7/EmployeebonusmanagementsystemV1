@@ -40,6 +40,21 @@ internal class SqlQueryRepository(
             param: parameters,
             commandType: commandType);
     }
+
+    public async Task<IEnumerable<T>> LoadMultipleData<T, U>(
+    string sql,
+    U parameters,
+    string connectionId = "Default",
+    CommandType commandType = CommandType.StoredProcedure)
+    {
+        using IDbConnection connection = new SqlConnection(connectionId);
+
+        return await connection.QueryAsync<T>(
+            sql: sql,
+            param: parameters,
+            commandType: commandType);
+    }
+
 }
 
 

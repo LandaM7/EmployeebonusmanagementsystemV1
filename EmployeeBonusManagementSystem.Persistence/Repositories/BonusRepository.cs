@@ -10,66 +10,42 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories;
 public class BonusRepository(
         ISqlQueryRepository sqlQueryRepository,
         ISqlCommandRepository sqlCommandRepository,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IUnitOfWork unitOfWork)
         : IBonusRepository
 
 {
-    public async Task<int> AddBonusAsync(BonusEntity bonus)
+    public async Task<List<AddBonusesDto>> AddBonusAsync(BonusEntity bonus)
+
     {
         try
         {
-            var query = @"
-            INSERT INTO [HRManagementEmployee].[dbo].[Bonuses]
-                (EmployeeId, Amount, IsRecommenderBonus, Reason, CreateDate, CreateByUserId, RecommendationLevel)
-            VALUES
-               (@EmployeeId, @Amount, @IsRecommenderBonus, @Reason, @CreateDate, @CreateByUserId, @RecommendationLevel);            
-            SELECT SCOPE_IDENTITY();
-        ";
-            var parameters = new
-            {
-                EmployeeId = bonus.EmployeeId,
-                Amount = bonus.Amount,
-                IsRecommenderBonus = bonus.IsRecommenderBonus,
-                Reason = bonus.Reason,
-                CreateDate = bonus.CreateDate,
-                CreateByUserId = bonus.CreateByUserId,
-                RecommendationLevel = bonus.RecommendationLevel
-            };
+            //await unitOfWork.OpenAsync();
+            //await unitOfWork.BeginTransactionAsync();
 
 
-            return await sqlCommandRepository.SaveData(
-                query,
-                parameters,
-                configuration.GetConnectionString("DefaultConnection"),
-                CommandType.Text);
+            var bonusesResult = await sqlQueryRepository.LoadMultipleData<AddBonusesDto, dynamic>(
+            "[HRManagementEmployee].[dbo].[AddBonuses]",
+            new { EmployeeId = bonus.EmployeeId, BonusAmount = bonus.Amount },
+            configuration.GetConnectionString("DefaultConnection"),
+            CommandType.StoredProcedure);
 
+            //await unitOfWork.CommitAsync();
+
+            return bonusesResult.ToList();
         }
         catch (Exception ex)
         {
+            //if (unitOfWork.GetTransaction() != null)
+            //{
+            //    await unitOfWork.RollbackAsync();
+            //}
             throw new Exception(ex.Message);
         }
 
-    }
-    public async Task<List<AddBonusesDto>> AddRecommenderBonusAsync(int employeeId, decimal bonusAmount)
-    {
-        try
+        finally
         {
-
-            var result = await sqlQueryRepository.LoadData<AddBonusesDto, dynamic>(
-                "[HRManagementEmployee].[dbo].[AddBonuses]",
-                new { EmployeeId = employeeId, BonusAmount = bonusAmount },
-                configuration.GetConnectionString("DefaultConnection"),
-                CommandType.StoredProcedure);
-
-
-            return result.ToList();
-
-        }
-        catch (Exception ex)
-        {
-
-            throw new Exception(ex.Message);
+            //await unitOfWork.CloseAsync();
         }
     }
-
 }

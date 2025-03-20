@@ -5,6 +5,6 @@ namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
 public interface IBonusRepository
 {
-    Task<int> AddBonusAsync(BonusEntity bonus);
-    Task<List<AddBonusesDto>> AddRecommenderBonusAsync(int employeeId, decimal bonusAmount);
+    public Task<List<AddBonusesDto>> AddBonusAsync(BonusEntity bonus);
+
 }

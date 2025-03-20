@@ -40,4 +40,9 @@ public class UnitOfWork(
         if (await context.Database.CanConnectAsync())
             await context.Database.RollbackTransactionAsync();
     }
+    public async Task GetTransaction()
+    {
+        if (await context.Database.CanConnectAsync())
+            await context.Database.RollbackTransactionAsync();
+    }
 }
