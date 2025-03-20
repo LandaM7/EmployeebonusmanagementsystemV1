@@ -1,4 +1,5 @@
 ﻿using EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,5 +22,7 @@ public class BonusController : ControllerBase
         var result = await _mediator.Send(request);
         return Ok(result);
     }
+
+
 }
 

@@ -22,53 +22,43 @@ namespace EmployeeBonusManagementSystem.Persistence;
 
 public static class PersistenceDI
 {
-    public static IServiceCollection AddPersistence(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        // DB კონტექსტის დამატება 
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+	public static IServiceCollection AddPersistence(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		services.AddDbContext<ApplicationDbContext>(options =>
+			options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IDbConnection>(provider =>
-        {
-	        return new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        });
+		services.AddScoped<IDbConnection>(provider =>
+			new SqlConnection(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IDbConnectionFactory>(provider =>
-	        new SqlConnectionFactory(configuration.GetConnectionString("DefaultConnection")));
+		services.AddScoped<IDbConnectionFactory>(provider =>
+			new SqlConnectionFactory(configuration.GetConnectionString("DefaultConnection")));
 
 		services.AddScoped<IDbTransaction>(provider =>
-        {
-	        var connection = provider.GetRequiredService<IDbConnection>();
-	        connection.Open();
-	        return connection.BeginTransaction();
-        });
-		services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+		{
+			var connection = provider.GetRequiredService<IDbConnection>();
+			connection.Open();
+			return connection.BeginTransaction();
+		});
 
-		
+		services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+		services.AddScoped<IBonusRepository, BonusRepository>();
+		services.AddScoped<IReportRepository, ReportRepository>();
+		services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
+		services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
 
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IEmployeeService<EmployeeDto>, ManageEmployeesService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
 
-        //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
-
+		services.AddScoped<IEmployeeService<EmployeeDto>, ManageEmployeesService>();
+		services.AddScoped<IAuthService, AuthService>();
+		services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
 		services.AddScoped<IJwtService, JwtService>();
-        //services.AddScoped<RoleAssignmentService>();
-        services.AddScoped<IRequestHandler<AddEmployeeCommand, bool>, AddEmployeeCommandHandler>();
 
+		services.AddScoped<IRequestHandler<AddEmployeeCommand, bool>, AddEmployeeCommandHandler>();
 
-        services.AddScoped<IReportRepository, ReportRepository>();
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-        services.AddScoped<IBonusRepository, BonusRepository>();
-        services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
-        services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
 		return services;
 
-    }
+	}
 }
 

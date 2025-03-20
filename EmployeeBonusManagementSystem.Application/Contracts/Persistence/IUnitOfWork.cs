@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Persistence
 {
-	public interface IUnitOfWork : IDisposable
-	{
-		IDbTransaction BeginTransaction();
-		void Commit();
-		void Rollback();
-		IDbConnection Connection { get; }
-		Task<int> CompleteAsync();
+    public interface IUnitOfWork : IDisposable
+    {
+
+	    IDbTransaction BeginTransaction(); 
+	    Task BeginTransactionAsync(); 
+	    void Commit();
+	    Task CommitAsync();
+	    void Rollback();
+	    Task RollbackAsync();
+	    IDbConnection Connection { get; } 
+	    Task<int> CompleteAsync(); 
 	}
 }

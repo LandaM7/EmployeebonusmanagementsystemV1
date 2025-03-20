@@ -53,6 +53,58 @@
   },
   {
     "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
+    "Method": "GetEmoloyeeBonus",
+    "RelativePath": "api/employees/GetEmployeeBonus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "PersonalNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus.GetEmployeeBonusDto, EmployeeBonusManagementSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
+    "Method": "GetEmoloyeeSalary",
+    "RelativePath": "api/employees/GetEmployeeSalary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "personalNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus.GetEmployeeBonusDto, EmployeeBonusManagementSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
     "Method": "Login",
     "RelativePath": "api/employees/login",
     "HttpMethod": "POST",

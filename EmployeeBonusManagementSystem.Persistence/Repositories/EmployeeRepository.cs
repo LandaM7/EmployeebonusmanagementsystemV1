@@ -191,10 +191,23 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 		}
 
 
-		public async Task<IEnumerable<EmployeeEntity>> GetEmployeeBonus()
+		public async Task<IEnumerable<EmployeeEntity>> GetEmployeeSalary(string personalNumber)
 		{
+			if (string.IsNullOrWhiteSpace(personalNumber))
+				throw new ArgumentException("Personal number cannot be null or empty.", nameof(personalNumber));
 
+			var query = @"
+			        SELECT FirstName , LastName , Salary 
+					FROM Employees WHERE  PersonalNumber = @PersonalNumber";
+
+			using var connection = _unitOfWork.Connection; // Remove parentheses
+			var salary = await connection.QueryAsync<EmployeeEntity>(query, new { PersonalNumber = personalNumber });
+
+			return salary.ToList();
 		}
+
+
+
 	}
 }
 

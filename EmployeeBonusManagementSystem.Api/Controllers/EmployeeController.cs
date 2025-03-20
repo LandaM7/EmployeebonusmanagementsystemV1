@@ -6,6 +6,8 @@ using EmployeeBonusManagementSystem.Application.Features.Employees.Queries;
 using EmployeeBonusManagementSystem.Application.Features.Employees;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeSalary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +57,23 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 		    return Unauthorized(new { message = "Invalid credentials" });
 	    }
 
+	    [Authorize("User")]
+		[HttpGet("GetEmployeeBonus")]
+	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeBonus(
+		    [FromQuery] GetEmployeeBonusQuery request)
+	    {
+		    var result = await _mediator.Send(request);
+		    return Ok(result);
+	    }
+
+		[Authorize("User")]
+	    [HttpGet("GetEmployeeSalary")]
+	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeSalary(
+		    [FromQuery] GetEmployeeSalaryQuery request)
+	    {
+		    var result = await _mediator.Send(request);
+		    return Ok(result);
+	    }
 
 	}
 }

@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus
 {
-    public record GetEmployeeBonusQuery(int EmployeeId) : IRequest<List<GetEmployeeBonusDto>>;
+    public record GetEmployeeBonusQuery(string PersonalNumber) : IRequest<List<GetEmployeeBonusDto>>;
 }

@@ -1,59 +1,67 @@
-﻿using System;
+﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
-using EmployeeBonusManagementSystem.Infrastructure.Repositories;
-using EmployeeBonusManagementSystem.Persistence.Repositories.Implementations;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
 namespace EmployeeBonusManagementSystem.Persistence
 {
 	public class UnitOfWork : IUnitOfWork
 	{
+		private readonly ApplicationDbContext _context;
 		private readonly IDbConnectionFactory _connectionFactory;
 		private IDbConnection _connection;
 		private IDbTransaction _transaction;
 		private bool _disposed;
 
-		public UnitOfWork(IDbConnectionFactory connectionFactory)
+		public UnitOfWork(ApplicationDbContext context, IDbConnectionFactory connectionFactory)
 		{
-			_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+			_context = context;
+			_connectionFactory = connectionFactory;
 			_connection = _connectionFactory.CreateConnection();
 			_connection.Open();
 		}
 
 		public IDbConnection Connection => _connection;
 
-
 		public IDbTransaction BeginTransaction()
 		{
 			if (_transaction == null)
 			{
-			
 				_transaction = _connection.BeginTransaction();
 			}
 			return _transaction;
 		}
 
+		public async Task BeginTransactionAsync()
+		{
+			await _context.Database.BeginTransactionAsync();
+		}
+
 		public void Commit()
 		{
-			if (_transaction == null)
-				throw new InvalidOperationException("No active transaction.");
+			_transaction?.Commit();
+			_transaction?.Dispose();
+			_transaction = null;
+		}
 
-			_transaction.Commit();
-			_transaction.Dispose();
-			_transaction = null; // Reset transaction
+		public async Task CommitAsync()
+		{
+			await _context.Database.CommitTransactionAsync();
 		}
 
 		public void Rollback()
 		{
-			if (_transaction == null)
-				throw new InvalidOperationException("No active transaction.");
+			_transaction?.Rollback();
+			_transaction?.Dispose();
+			_transaction = null;
+		}
 
-			_transaction.Rollback();
-			_transaction.Dispose();
-			_transaction = null; // Reset transaction
+		public async Task RollbackAsync()
+		{
+			await _context.Database.RollbackTransactionAsync();
 		}
 
 		public async Task<int> CompleteAsync()
@@ -61,12 +69,14 @@ namespace EmployeeBonusManagementSystem.Persistence
 			try
 			{
 				Commit();
-				return 1; // Success
+				await CommitAsync();
+				return 1;
 			}
 			catch (Exception)
 			{
 				Rollback();
-				return 0; // Failure
+				await RollbackAsync();
+				return 0;
 			}
 			finally
 			{
@@ -83,11 +93,9 @@ namespace EmployeeBonusManagementSystem.Persistence
 				{
 					_connection.Close();
 				}
-
 				_connection?.Dispose();
 				_disposed = true;
 			}
 		}
-
 	}
 }

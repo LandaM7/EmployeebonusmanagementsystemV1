@@ -6,4 +6,6 @@ namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
 public interface IBonusRepository
 {
+	Task<IEnumerable<BonusEntity>> GetEmployeeBonus(string personalNumber);
+
 }

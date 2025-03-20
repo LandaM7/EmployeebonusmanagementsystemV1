@@ -12,20 +12,19 @@ namespace EmployeeBonusManagementSystem.Application.Features.Employees.Queries.G
 {
     internal class GetEmployeeBonusQueryHandler : IRequestHandler<GetEmployeeBonusQuery, List<GetEmployeeBonusDto>>
 	{
-		private readonly IEmployeeRepository _employeeRepository;
+		private readonly IBonusRepository _bonusRepository;
 		private readonly IMapper _mapper;
 
-		public GetEmployeeBonusQueryHandler(IEmployeeRepository employeeRepository, IMapper mapper)
+		public GetEmployeeBonusQueryHandler(IBonusRepository bonusRepository, IMapper mapper)
 		{
-			_employeeRepository = employeeRepository;
+			_bonusRepository = bonusRepository;
 			_mapper = mapper;
 		}
 
 		public async Task<List<GetEmployeeBonusDto>> Handle(GetEmployeeBonusQuery request, CancellationToken cancellationToken)
 		{
-			//TODO   -------- add this ------------- 
-			var employees = await _employeeRepository.GetAllEmployeesAsync();
-			return _mapper.Map<List<GetEmployeeBonusDto>>(employees);
+			var bonusis = await _bonusRepository.GetEmployeeBonus(request.PersonalNumber);
+			return _mapper.Map<List<GetEmployeeBonusDto>>(bonusis);
 		}
 	}
 }

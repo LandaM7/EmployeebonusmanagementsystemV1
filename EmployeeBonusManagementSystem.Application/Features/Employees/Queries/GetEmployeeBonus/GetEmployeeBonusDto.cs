@@ -8,9 +8,9 @@ namespace EmployeeBonusManagementSystem.Application.Features.Employees.Queries.G
 {
     public class GetEmployeeBonusDto
     {
-        public string EmployeeFullName { get; set; }
-        public decimal Bonus { get; set; }
+        public decimal Amount { get; set; }
         public DateTime DateOfBonus { get; set; }
+        public string Reason { get; set; }
      
     }
 }
