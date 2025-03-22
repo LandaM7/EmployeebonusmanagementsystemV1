@@ -6,6 +6,7 @@ using Dapper;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -14,6 +15,7 @@ using System;
 using Microsoft.Data.SqlClient;
 
 using Microsoft.AspNetCore.Identity;
+using EmployeeBonusManagementSystem.Persistence.Repositories.Common;
 
 namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 {
@@ -31,6 +33,49 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 		public EmployeeRepository(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
+		}
+
+		public async Task<(bool, int)> GetEmployeeExistsByPersonalNumberAsync(string personalNumber)
+		{
+			var query = @"
+                    SELECT 
+                        Id 
+                    FROM
+                        [HRManagementEmployee].[dbo].[Employees](NOLOCK)
+                    WHERE
+                        PersonalNumber = @PersonalNumber;
+                "
+				;
+			if (_connection.State != ConnectionState.Open)
+			{
+				_connection.Open();
+			}
+
+			// Start a transaction
+			_transaction = _connection.BeginTransaction();
+
+			try
+			{
+				// Execute the query
+				var result = await _connection.QueryFirstOrDefaultAsync<int>(
+					query,
+					new { PersonalNumber = personalNumber },
+					transaction: _transaction,
+					commandType: CommandType.Text
+				);
+
+				// Commit the transaction if everything went well
+				_transaction.Commit();
+				//return result;
+				return (result > 0, result);
+			}
+			catch (Exception ex)
+			{
+				// Rollback the transaction in case of an error
+				_transaction.Rollback();
+				Console.WriteLine($"Error: {ex.Message}");
+				throw;
+			}
 		}
 
 

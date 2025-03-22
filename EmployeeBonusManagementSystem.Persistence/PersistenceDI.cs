@@ -61,6 +61,13 @@ public static class PersistenceDI
 		services.AddScoped<IRequestHandler<AddEmployeeCommand, bool>, AddEmployeeCommandHandler>();
 
 		return services;
+        services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IBonusRepository, BonusRepository>();
+        services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
+        services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        return services;
 
 	}
 }

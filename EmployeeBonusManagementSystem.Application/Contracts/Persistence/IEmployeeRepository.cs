@@ -19,6 +19,7 @@ public interface IEmployeeRepository
 	Task<IEnumerable<BonusEntity>> GetEmployeeBonus(int Id);
 	Task<IEnumerable<EmployeeEntity>> GetEmployeeRecomender(int Id);
 
+    Task<(bool, int)> GetEmployeeExistsByPersonalNumberAsync(string personalNumber);
 }
 
 

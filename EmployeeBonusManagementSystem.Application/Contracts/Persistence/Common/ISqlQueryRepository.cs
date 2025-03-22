@@ -15,4 +15,10 @@ public interface ISqlQueryRepository
         U parameters,
         string connectionId = "Default",
         CommandType commandType = CommandType.StoredProcedure);
+
+    Task<IEnumerable<T>> LoadMultipleData<T, U>(
+    string sql,
+    U parameters,
+    string connectionId = "Default",
+    CommandType commandType = CommandType.StoredProcedure);
 }

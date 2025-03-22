@@ -553,6 +553,18 @@
           "createByUserId": {
             "type": "integer",
             "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "personalNumber": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

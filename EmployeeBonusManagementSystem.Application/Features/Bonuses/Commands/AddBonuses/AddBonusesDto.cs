@@ -9,5 +9,7 @@ public class AddBonusesDto
     public string Reason { get; set; } = string.Empty;
     public DateTime CreateDate { get; set; }
     public int CreateByUserId { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string PersonalNumber { get; set; } = string.Empty;
 }
-

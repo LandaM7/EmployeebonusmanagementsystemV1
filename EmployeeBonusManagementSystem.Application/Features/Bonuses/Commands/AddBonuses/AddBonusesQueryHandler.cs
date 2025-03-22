@@ -6,8 +6,6 @@ using MediatR;
 namespace EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 
 public class AddBonusesQueryHandler(
-    IBonusRepository bonusRepository,
-    IEmployeeRepository employeeRepository,
     IUnitOfWork unitOfWork
     /*JsonWebToken როლები*/)
     : IRequestHandler<AddBonusesQuery, List<AddBonusesDto>>
@@ -18,56 +16,69 @@ public class AddBonusesQueryHandler(
 
     {
         // თანამშრომლის ნახვა PersonalNumber ით
-        //var employee = await employeeRepository.GetByPersonalNumberAsync(request.PersonalNumber);
-        //if (employee == null)
-        //{
-        //    throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
-        //}
-
-
-        var mainBonus = new BonusEntity
-        {
-            //EmployeeId = employee.Id,
-            Amount = request.BonusAmount,
-            //Reason = reason,
-            CreateDate = DateTime.UtcNow,
-            IsRecommenderBonus = false,
-            RecommendationLevel = 0,
-            //CreateByUserId = adminUserId, ეს ჯერ არ მაქვს
-        };
-        //int adminUserId = currentUserService.GetUserId(); ეს JWT
-
-    //    using (var transaction = await unitOfWork.BeginTransactionAsync())
-    //    {
-    //        try
-    //        {
-
-        //await unitOfWork.BeginTransactionAsync();
         try
         {
-        //    await bonusRepository.AddBonusAsync(mainBonus);
-        //    await bonusRepository.AddRecommenderBonusAsync(employee.Id, request.BonusAmount);
-        //    await unitOfWork.CommitAsync();
+            await unitOfWork.OpenAsync();
+            await unitOfWork.BeginTransactionAsync();
 
-            var bonuses = new List<AddBonusesDto>
+            var employeeExists = await unitOfWork.EmployeeRepository.GetEmployeeExistsByPersonalNumberAsync(request.PersonalNumber);
+            if (!employeeExists.Item1)
             {
-                new()
-                {
-                    EmployeeId = mainBonus.EmployeeId,
-                    Amount = mainBonus.Amount,
-                    Reason = mainBonus.Reason,
-                    CreateDate = mainBonus.CreateDate,
-                    RecommendationLevel = mainBonus.RecommendationLevel,
-                    IsRecommenderBonus = mainBonus.IsRecommenderBonus
-    }
-            };
+                throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
+            }
+
+
+            var bonuses = await unitOfWork.BonusRepository.AddBonusAsync(new BonusEntity
+            {
+                EmployeeId = employeeExists.Item2,
+                Amount = request.BonusAmount
+            });
+
+            await unitOfWork.CommitAsync();
 
             return bonuses;
         }
-        catch
+
+        //    var reason = $"{DateTime.UtcNow:MMMM} თვის ბონუსის ჩარიცხვა";
+
+        //    var mainBonus = new BonusEntity
+        //    {
+        //        EmployeeId = employeeExists.Item2,
+        //        Amount = request.BonusAmount,
+        //        Reason = reason,
+        //        CreateDate = DateTime.UtcNow,
+        //        IsRecommenderBonus = false,
+        //        RecommendationLevel = 0,
+        //        //CreateByUserId = adminUserId, ეს ჯერ არ მაქვს
+        //    };
+        //    //int adminUserId = currentUserService.GetUserId(); ეს JWT
+
+        //    await unitOfWork.BonusRepository.AddBonusAsync(mainBonus);
+        //    await unitOfWork.CommitAsync();
+
+        //    var bonuses = new List<AddBonusesDto>
+        //    {
+        //        new()
+        //        {
+        //            EmployeeId = mainBonus.EmployeeId,
+        //            Amount = mainBonus.Amount,
+        //            Reason = mainBonus.Reason,
+        //            CreateDate = mainBonus.CreateDate,
+        //            RecommendationLevel = mainBonus.RecommendationLevel,
+        //            IsRecommenderBonus = mainBonus.IsRecommenderBonus
+        //        }
+        //    };
+
+        //    return bonuses;
+        //}
+        catch (Exception ex)
         {
-           // await unitOfWork.RollbackAsync();
-            throw;
+            await unitOfWork.RollbackAsync();
+            throw new Exception(ex.Message);
+        }
+        finally
+        {
+            await unitOfWork.CloseAsync();
         }
     }
 }

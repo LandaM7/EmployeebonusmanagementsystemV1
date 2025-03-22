@@ -1,13 +1,11 @@
 ﻿using Dapper;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence.Common;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace EmployeeBonusManagementSystem.Persistence.Repositories.Common;
 
-internal class SqlCommandRepository(
-    IConfiguration config)
+internal class SqlCommandRepository
     : ISqlCommandRepository
 {
     public async Task<int> SaveData<T>(
