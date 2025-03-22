@@ -62,7 +62,7 @@
         }
       }
     },
-    "/api/employees": {
+    "/api/Employees": {
       "get": {
         "tags": [
           "Employee"
@@ -74,7 +74,7 @@
         }
       }
     },
-    "/api/employees/addEmployee": {
+    "/api/Employees/Employee": {
       "post": {
         "tags": [
           "Employee"
@@ -105,7 +105,7 @@
         }
       }
     },
-    "/api/employees/login": {
+    "/api/Employees/login": {
       "post": {
         "tags": [
           "Employee"
@@ -136,19 +136,10 @@
         }
       }
     },
-    "/api/employees/GetEmployeeBonus": {
+    "/api/Employees/Bonus": {
       "get": {
         "tags": [
           "Employee"
-        ],
-        "parameters": [
-          {
-            "name": "PersonalNumber",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -183,19 +174,10 @@
         }
       }
     },
-    "/api/employees/GetEmployeeSalary": {
+    "/api/Employees/Salary": {
       "get": {
         "tags": [
           "Employee"
-        ],
-        "parameters": [
-          {
-            "name": "personalNumber",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -222,6 +204,44 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/GetEmployeeBonusDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Employees/Recommender": {
+      "get": {
+        "tags": [
+          "Employee"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetEmployeeRecommenderDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetEmployeeRecommenderDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetEmployeeRecommenderDto"
                   }
                 }
               }
@@ -680,6 +700,20 @@
             "format": "date-time"
           },
           "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetEmployeeRecommenderDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
             "type": "string",
             "nullable": true
           }

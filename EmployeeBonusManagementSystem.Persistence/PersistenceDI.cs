@@ -12,6 +12,7 @@ using EmployeeBonusManagementSystem.Persistence.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Common;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Implementations;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,8 @@ public static class PersistenceDI
 		services.AddScoped<IReportRepository, ReportRepository>();
 		services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
 		services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
+
+		//services.AddScoped<IHttpContextAccessor>();
 
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 

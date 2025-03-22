@@ -30,7 +30,7 @@ namespace EmployeeBonusManagement.Application.Services
 
 		    var claims = new List<Claim>
 		    {
-			    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+			    new Claim("Id", user.Id.ToString()),
 			    new Claim(ClaimTypes.Email, user.Email)
 		    };
 

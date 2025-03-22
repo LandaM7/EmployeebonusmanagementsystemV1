@@ -49,51 +49,48 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 		}
 
 
-		public async Task AddEmployeeAsync(EmployeeEntity employee, string role , IDbTransaction transaction)
+		public async Task AddEmployeeAsync(EmployeeEntity employee, string role, IDbTransaction transaction)
 		{
 			if (_unitOfWork.Connection == null)
 				throw new InvalidOperationException("Database connection is not initialized.");
 
 			try
+			{
+				var query = @"
+						INSERT INTO Employees (
+							FirstName, LastName, PersonalNumber, BirthDate, Email, Password, Salary, HireDate, 
+							UserName, DepartmentId, RecommenderEmployeeId, IsActive, IsPasswordChanged, 
+							PasswordChangeDate, CreateByUserId, RefreshToken, CreateDate
+						)
+						VALUES (
+							@FirstName, @LastName, @PersonalNumber, @BirthDate, @Email, @Password, @Salary, @HireDate, 
+							@UserName, @DepartmentId, @RecommenderEmployeeId, @IsActive, @IsPasswordChanged, 
+							@PasswordChangeDate, @CreateByUserId, @RefreshToken, @CreateDate
+						);
+						SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+				var employeeId = await _unitOfWork.Connection.QuerySingleAsync<int>(query, employee, transaction);
+
+				var roleId = role.ToLower() switch
 				{
-					var query = @"
-                INSERT INTO Employees (
-                    FirstName, LastName, PersonalNumber, BirthDate, Email, Password, Salary, HireDate, 
-                    UserName, DepartmentId, RecommenderEmployeeId, IsActive, IsPasswordChanged, 
-                    PasswordChangeDate, CreateByUserId, RefreshToken, CreateDate
-                )
-                VALUES (
-                    @FirstName, @LastName, @PersonalNumber, @BirthDate, @Email, @Password, @Salary, @HireDate, 
-                    @UserName, @DepartmentId, @RecommenderEmployeeId, @IsActive, @IsPasswordChanged, 
-                    @PasswordChangeDate, @CreateByUserId, @RefreshToken, @CreateDate
-                );
-                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+					"admin" => 1,
+					"user" => 2,
+					_ => throw new ArgumentException($"Invalid role: {role}")
+				};
 
-					var employeeId = await _unitOfWork.Connection.QuerySingleAsync<int>(query, employee, transaction);
+				var roleQuery = @"
+							INSERT INTO EmployeeRole (EmployeeId, RoleId)
+							VALUES (@EmployeeId, @RoleId)";
 
-					var roleId = role.ToLower() switch
-					{
-						"admin" => 1,
-						"user" => 2,
-						_ => throw new ArgumentException($"Invalid role: {role}")
-					};
-
-					var roleQuery = @"
-                INSERT INTO EmployeeRole (EmployeeId, RoleId)
-                VALUES (@EmployeeId, @RoleId)";
-
-					await _unitOfWork.Connection.ExecuteAsync(roleQuery, new { EmployeeId = employeeId, RoleId = roleId }, transaction);
-
-
-				}
-				catch (Exception ex)
-				{
-					transaction.Rollback();
-					Console.WriteLine($"Error adding employee and role: {ex.Message}");
-					throw;
-				}
-			
+				await _unitOfWork.Connection.ExecuteAsync(roleQuery, new { EmployeeId = employeeId, RoleId = roleId }, transaction);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error adding employee and role: {ex.Message}");
+				throw;
+			}
 		}
+
 
 
 		public async Task<EmployeeEntity> GetByIdAsync(int id)
@@ -191,23 +188,52 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 		}
 
 
-		public async Task<IEnumerable<EmployeeEntity>> GetEmployeeSalary(string personalNumber)
+		public async Task<IEnumerable<EmployeeEntity>> GetEmployeeSalary(int  Id)
 		{
-			if (string.IsNullOrWhiteSpace(personalNumber))
-				throw new ArgumentException("Personal number cannot be null or empty.", nameof(personalNumber));
-
+			
 			var query = @"
 			        SELECT FirstName , LastName , Salary 
-					FROM Employees WHERE  PersonalNumber = @PersonalNumber";
+					FROM Employees WHERE  Id = @Id";
 
 			using var connection = _unitOfWork.Connection; // Remove parentheses
-			var salary = await connection.QueryAsync<EmployeeEntity>(query, new { PersonalNumber = personalNumber });
+			var salary = await connection.QueryAsync<EmployeeEntity>(query, new { Id = Id });
 
 			return salary.ToList();
 		}
 
 
+		public async Task<IEnumerable<BonusEntity>> GetEmployeeBonus(int Id)
+		{
+			
+			var query = @"
+			        SELECT e.PersonalNumber, b.Amount, b.CreateDate , b.Reason
+					FROM Employees e
+					INNER JOIN Bonuses b ON e.Id = b.EmployeeId
+					WHERE e.Id = @Id";
 
+			using var connection = _unitOfWork.Connection;
+
+			var bonuses = await connection.QueryAsync<BonusEntity>(query, new { Id = Id });
+
+
+			return bonuses.ToList();
+		}
+
+		public async Task<IEnumerable<EmployeeEntity>> GetEmployeeRecomender(int Id)
+		{
+			var query = @"
+			        SELECT recommender.FirstName, recommender.LastName
+					FROM Employees e
+					INNER JOIN Employees recommender ON e.RecommenderEmployeeId = recommender.Id
+					WHERE e.Id = @Id";
+
+			using var connection = _unitOfWork.Connection;
+
+			var recommender = await connection.QueryAsync<EmployeeEntity>(query, new { Id = Id });
+
+
+			return recommender.ToList();
+		}
 	}
 }
 

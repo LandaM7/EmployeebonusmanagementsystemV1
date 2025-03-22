@@ -15,7 +15,9 @@ public interface IEmployeeRepository
 	Task<EmployeeEntity> GetByEmailAsync(string email);
 	Task<bool> CheckPasswordAsync(EmployeeEntity user, string enteredPassword);
 	Task<List<string>> GetUserRolesAsync(int employeeId);
-	Task<IEnumerable<EmployeeEntity>> GetEmployeeSalary(string personalNumber);
+	Task<IEnumerable<EmployeeEntity>> GetEmployeeSalary(int Id);
+	Task<IEnumerable<BonusEntity>> GetEmployeeBonus(int Id);
+	Task<IEnumerable<EmployeeEntity>> GetEmployeeRecomender(int Id);
 
 }
 

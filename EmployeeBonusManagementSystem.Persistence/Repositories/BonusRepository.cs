@@ -77,23 +77,6 @@ public class BonusRepository(
     }
 }
 
-    public async Task<IEnumerable<BonusEntity>> GetEmployeeBonus(string personalNumber)
-    {
-	    if (string.IsNullOrWhiteSpace(personalNumber))
-		    throw new ArgumentException("Personal number cannot be null or empty.", nameof(personalNumber));
-
-	    var query = @"
-			        SELECT e.PersonalNumber, b.Amount, b.CreateDate , b.Reason
-					FROM Employees e
-					INNER JOIN Bonuses b ON e.Id = b.EmployeeId
-					WHERE e.PersonalNumber = @PersonalNumber";
-
-	    using var connection = unitOfWork.Connection;
-
-	    var bonuses = await connection.QueryAsync<BonusEntity>(query, new { PersonalNumber = personalNumber });
-
-
-	    return bonuses.ToList();
-    }
+   
 
 }

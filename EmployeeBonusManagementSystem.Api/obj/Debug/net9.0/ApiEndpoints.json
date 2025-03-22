@@ -28,7 +28,7 @@
   {
     "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
     "Method": "GetAllEmployees",
-    "RelativePath": "api/employees",
+    "RelativePath": "api/Employees",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -37,8 +37,28 @@
   },
   {
     "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
+    "Method": "GetEmoloyeeBonus",
+    "RelativePath": "api/Employees/Bonus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus.GetEmployeeBonusDto, EmployeeBonusManagementSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
     "Method": "AddEmployee",
-    "RelativePath": "api/employees/addEmployee",
+    "RelativePath": "api/Employees/Employee",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -53,21 +73,31 @@
   },
   {
     "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
-    "Method": "GetEmoloyeeBonus",
-    "RelativePath": "api/employees/GetEmployeeBonus",
-    "HttpMethod": "GET",
+    "Method": "Login",
+    "RelativePath": "api/Employees/login",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "PersonalNumber",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "loginDto",
+        "Type": "EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login.LoginDto",
+        "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
+    "Method": "GetEmoloyeeRecommender",
+    "RelativePath": "api/Employees/Recommender",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus.GetEmployeeBonusDto, EmployeeBonusManagementSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeRecomendator.GetEmployeeRecommenderDto, EmployeeBonusManagementSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -80,17 +110,11 @@
   {
     "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
     "Method": "GetEmoloyeeSalary",
-    "RelativePath": "api/employees/GetEmployeeSalary",
+    "RelativePath": "api/Employees/Salary",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "personalNumber",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus.GetEmployeeBonusDto, EmployeeBonusManagementSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -102,22 +126,6 @@
         "StatusCode": 200
       }
     ]
-  },
-  {
-    "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.EmployeeController",
-    "Method": "Login",
-    "RelativePath": "api/employees/login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "loginDto",
-        "Type": "EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login.LoginDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
   },
   {
     "ContainingType": "EmployeeBonusManagementSystem.Api.Controllers.ReportController",

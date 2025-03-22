@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeSalary
 {
-    public record GetEmployeeSalaryQuery(string personalNumber) : IRequest<List<GetEmployeeSalaryDto>>;
+	public record GetEmployeeSalaryQuery() : IRequest<List<GetEmployeeSalaryDto>>
+	{
+		public int UserId { get; set; }
+	}
 }

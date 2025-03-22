@@ -35,7 +35,7 @@ namespace EmployeeBonusManagement.Application.Services
 			_employeeRepository = employeeRepository;
 		}
 
-	
+
 		public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync()
 		{
 			var employees = await _employeeRepository.GetAllEmployeesAsync();

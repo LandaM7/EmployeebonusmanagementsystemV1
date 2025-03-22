@@ -40,53 +40,36 @@ namespace EmployeeBonusManagementSystem.Application.Features.Employees.Commands.
 			{
 				try
 				{
-					// Log the start of the handler processing
-					Console.WriteLine(
-						$"[INFO] Handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}");
+					Console.WriteLine($"[INFO] Handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}");
 
 					// Map EmployeeDto to EmployeeEntity
 					var employee = _mapper.Map<EmployeeEntity>(request.EmployeeDto);
-					Console.WriteLine($"UserName after mapping: {employee.UserName}"); // Add this line
-
-					Console.WriteLine($"[INFO] Mapped EmployeeDto to EmployeeEntity successfully.");
+					Console.WriteLine($"UserName after mapping: {employee.UserName}");
 
 					// Hash the password and generate the refresh token
 					var hasher = new PasswordHasher<EmployeeEntity>();
 					employee.Password = hasher.HashPassword(null, request.EmployeeDto.Password);
-
-
 					employee.RefreshToken = _jwtService.GenerateRefreshToken();
-
-
 					employee.CreateDate = DateTime.UtcNow;
 					employee.PasswordChangeDate = DateTime.UtcNow;
 
-					// Add the employee to the repository
-					await _employeeRepository.AddEmployeeAsync(employee, request.EmployeeDto.Role,transaction);
+					// Add the employee
+					await _employeeRepository.AddEmployeeAsync(employee, request.EmployeeDto.Role, transaction);
 
-
-					// Complete the transaction
-					var saveResult = await _unitOfWork.CompleteAsync();
-					if (saveResult > 0)
-					{
-						Console.WriteLine(
-							$"[INFO] Employee saved successfully in database: {request.EmployeeDto.FirstName}");
-						return true;
-					}
-
-					// Log warning if save fails
-					Console.WriteLine($"[WARN] Failed to save Employee: {request.EmployeeDto.FirstName} in database.");
-					return false;
+					// Explicitly commit the transaction
+					transaction.Commit();
+					Console.WriteLine($"[INFO] Employee saved successfully in database: {request.EmployeeDto.FirstName}");
+					return true;
 				}
-
 				catch (Exception ex)
 				{
-					// Log the exception details
-					Console.WriteLine(
-						$"[ERROR] Error occurred while handling AddEmployeeCommand for Employee: {request.EmployeeDto.FirstName}. Exception: {ex.Message}");
+					// Rollback on failure
+					transaction.Rollback();
+					Console.WriteLine($"[ERROR] Error occurred: {ex.Message}");
 					return false;
 				}
 			}
+
 		}
 	}
 }

@@ -7,6 +7,7 @@ using EmployeeBonusManagementSystem.Application.Features.Employees;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeRecomendator;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeSalary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeeBonusManagementSystem.Api.Controllers
 {
     [ApiController]
-    [Route("api/employees")]
+    [Route("api/Employees")]
     public class EmployeeController : ControllerBase
     {
 	    private readonly IMediator _mediator;
@@ -33,7 +34,7 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 		    return Ok(employees);
 	    }
 
-		[HttpPost("addEmployee")]
+		[HttpPost("Employee")]
 	    [Authorize(Roles = "Admin")] 
 		public async Task<IActionResult> AddEmployee([FromBody] EmployeeDto employeeDto)
 	    {
@@ -58,20 +59,27 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 	    }
 
 	    [Authorize("User")]
-		[HttpGet("GetEmployeeBonus")]
-	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeBonus(
-		    [FromQuery] GetEmployeeBonusQuery request)
+		[HttpGet("Bonus")]
+	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeBonus()
 	    {
-		    var result = await _mediator.Send(request);
+		    var result = await _mediator.Send(new GetEmployeeBonusQuery());
 		    return Ok(result);
 	    }
 
+
 		[Authorize("User")]
-	    [HttpGet("GetEmployeeSalary")]
-	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeSalary(
-		    [FromQuery] GetEmployeeSalaryQuery request)
+	    [HttpGet("Salary")]
+	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeSalary()
 	    {
-		    var result = await _mediator.Send(request);
+			var result = await _mediator.Send(new GetEmployeeSalaryQuery());
+			return Ok(result);
+		}
+
+	    [Authorize("User")]
+	    [HttpGet("Recommender")]
+	    public async Task<ActionResult<List<GetEmployeeRecommenderDto>>> GetEmoloyeeRecommender()
+	    {
+		    var result = await _mediator.Send(new GetEmployeeRecommenderQuery());
 		    return Ok(result);
 	    }
 

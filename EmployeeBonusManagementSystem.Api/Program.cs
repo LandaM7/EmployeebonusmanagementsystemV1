@@ -53,6 +53,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(EmployeeProfile));
 builder.Services.AddAutoMapper(typeof(BonusProfile));
 
+builder.Services.AddHttpContextAccessor();
+
 
 
 
@@ -76,7 +78,20 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddEm
 		    };
 	    });
 
-    builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("User", policy =>
+	{
+		policy.RequireAuthenticatedUser();
+		policy.RequireRole("User"); // Both "User" and "Admin" can access
+	});
+
+	options.AddPolicy("Admin", policy =>
+	{
+		policy.RequireAuthenticatedUser();
+		policy.RequireRole("Admin"); // Only "Admin" can access
+	});
+});
 
 
 

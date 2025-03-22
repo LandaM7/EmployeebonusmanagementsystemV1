@@ -16,7 +16,7 @@ namespace EmployeeBonusManagementSystem.Domain.Entities
 
     public enum Role
     {
-        Employee,
-        Admin
+        Admin = 1,
+        User = 2
     }
 }
