@@ -26,38 +26,50 @@ public class AddBonusesQueryHandler(
                 throw new Exception($"თანამშრომელი პირადი ნომრით {request.PersonalNumber} არ მოიძებნა.");
             }
 
-            var reason = $"{DateTime.UtcNow:MMMM} თვის ბონუსის ჩარიცხვა";
 
-            var mainBonus = new BonusEntity
+            var bonuses = await unitOfWork.BonusRepository.AddBonusAsync(new BonusEntity
             {
                 EmployeeId = employeeExists.Item2,
-                Amount = request.BonusAmount,
-                Reason = reason,
-                CreateDate = DateTime.UtcNow,
-                IsRecommenderBonus = false,
-                RecommendationLevel = 0,
-                //CreateByUserId = adminUserId, ეს ჯერ არ მაქვს
-            };
-            //int adminUserId = currentUserService.GetUserId(); ეს JWT
+                Amount = request.BonusAmount
+            });
 
-            await unitOfWork.BonusRepository.AddBonusAsync(mainBonus);
             await unitOfWork.CommitAsync();
-
-            var bonuses = new List<AddBonusesDto>
-            {
-                new()
-                {
-                    EmployeeId = mainBonus.EmployeeId,
-                    Amount = mainBonus.Amount,
-                    Reason = mainBonus.Reason,
-                    CreateDate = mainBonus.CreateDate,
-                    RecommendationLevel = mainBonus.RecommendationLevel,
-                    IsRecommenderBonus = mainBonus.IsRecommenderBonus
-                }
-            };
 
             return bonuses;
         }
+
+        //    var reason = $"{DateTime.UtcNow:MMMM} თვის ბონუსის ჩარიცხვა";
+
+        //    var mainBonus = new BonusEntity
+        //    {
+        //        EmployeeId = employeeExists.Item2,
+        //        Amount = request.BonusAmount,
+        //        Reason = reason,
+        //        CreateDate = DateTime.UtcNow,
+        //        IsRecommenderBonus = false,
+        //        RecommendationLevel = 0,
+        //        //CreateByUserId = adminUserId, ეს ჯერ არ მაქვს
+        //    };
+        //    //int adminUserId = currentUserService.GetUserId(); ეს JWT
+
+        //    await unitOfWork.BonusRepository.AddBonusAsync(mainBonus);
+        //    await unitOfWork.CommitAsync();
+
+        //    var bonuses = new List<AddBonusesDto>
+        //    {
+        //        new()
+        //        {
+        //            EmployeeId = mainBonus.EmployeeId,
+        //            Amount = mainBonus.Amount,
+        //            Reason = mainBonus.Reason,
+        //            CreateDate = mainBonus.CreateDate,
+        //            RecommendationLevel = mainBonus.RecommendationLevel,
+        //            IsRecommenderBonus = mainBonus.IsRecommenderBonus
+        //        }
+        //    };
+
+        //    return bonuses;
+        //}
         catch (Exception ex)
         {
             await unitOfWork.RollbackAsync();
