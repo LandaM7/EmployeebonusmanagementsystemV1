@@ -30,6 +30,10 @@ public class BonusEntityConfiguration : IEntityTypeConfiguration<BonusEntity>
 
         builder.Property(b => b.RecommendationLevel)
             .IsRequired();
+
+        builder.Property(b => b.TransactionId)
+            .HasColumnType("uniqueidentifier")
+            .IsRequired();
     }
 }
 

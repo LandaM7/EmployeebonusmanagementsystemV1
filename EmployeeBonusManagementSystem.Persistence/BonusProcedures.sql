@@ -1,72 +1,108 @@
 ﻿-- ბონუსის ჩარიცხვა 
---GO
---CREATE PROCEDURE AddBonuses
+--ALTER PROCEDURE AddBonuses   
 --    @EmployeeId INT,
 --    @BonusAmount DECIMAL(18,2)
 --AS
 --BEGIN
---    SET NOCOUNT ON;   
+--    SET NOCOUNT ON;
+
 --    DECLARE @Salary DECIMAL(18,2), @MaxBonusAmount DECIMAL(18,2), @MaxBonusPercentage INT,
 --            @MinBonusPercentage INT, @MaxRecommendationLevel INT, @RecommendationBonusRate DECIMAL(18,2),
---            @CreateDate DATETIME, @BonusPercentage DECIMAL(18,2);
+--            @CreateDate DATETIME = GETUTCDATE(), @BonusPercentage DECIMAL(18,2),
+--            @TransactionId UNIQUEIDENTIFIER = NEWID();
 
---    SET @CreateDate = GETUTCDATE();
-    
---    SELECT @Salary = Salary
---    FROM Employees
---    WHERE Id = @EmployeeId;
-
+--    SELECT @Salary = Salary FROM Employees WHERE Id = @EmployeeId;
 --    IF @Salary IS NULL
 --    BEGIN
 --        THROW 50000, 'თანამშრომლის ხელფასი ვერ მოიძებნა.', 1;
 --        RETURN;
 --    END;
-    
+
 --    SET @BonusPercentage = (@BonusAmount / @Salary) * 100;
-    
---    SELECT @MaxBonusAmount = MaxBonusAmount,
---           @MaxBonusPercentage = MaxBonusPercentage,
---           @MinBonusPercentage = MinBonusPercentage,
---           @MaxRecommendationLevel = MaxRecommendationLevel,
+
+--    SELECT @MaxBonusAmount = MaxBonusAmount, @MaxBonusPercentage = MaxBonusPercentage,
+--           @MinBonusPercentage = MinBonusPercentage, @MaxRecommendationLevel = MaxRecommendationLevel,
 --           @RecommendationBonusRate = RecommendationBonusRate
 --    FROM BonusConfigurations;
-    
+
 --    IF @BonusAmount > @MaxBonusAmount
 --    BEGIN
---        THROW 50001, 'ბონუსის თანხა სცდება შესაბამის ლიმიტს.', 1;
+--        THROW 50001, 'ბონუსის თანხა სცდება ლიმიტს.', 1;
 --        RETURN;
 --    END;
-    
+
 --    IF @BonusPercentage < @MinBonusPercentage
 --    BEGIN
---        THROW 50002, 'ბონუსის თანხა ნაკლებია შესაბამის ლიმიტზე.', 1;
+--        THROW 50002, 'ბონუსის პროცენტი ნაკლებია მინიმუმზე.', 1;
 --        RETURN;
 --    END;
-    
---    DECLARE @CurrentEmployeeId INT = @EmployeeId, @CurrentBonusAmount DECIMAL(18,2) = @BonusAmount;
---    DECLARE @Level INT = 1;
+
+--    DECLARE @GeorgianMonth NVARCHAR(20)
+--    SET @GeorgianMonth = CASE DATENAME(MONTH, @CreateDate)
+--        WHEN 'January' THEN N'იანვრის'
+--        WHEN 'February' THEN N'თებერვლის'
+--        WHEN 'March' THEN N'მარტის'
+--        WHEN 'April' THEN N'აპრილის'
+--        WHEN 'May' THEN N'მაისის'
+--        WHEN 'June' THEN N'ივნისის'
+--        WHEN 'July' THEN N'ივლისის'
+--        WHEN 'August' THEN N'აგვისტოს'
+--        WHEN 'September' THEN N'სექტემბრის'
+--        WHEN 'October' THEN N'ოქტომბრის'
+--        WHEN 'November' THEN N'ნოემბრის'
+--        WHEN 'December' THEN N'დეკემბრის'
+--    END
+
+--    -- მთავარი ბონუსი
+--    INSERT INTO Bonuses (EmployeeId, Amount, IsRecommenderBonus, Reason, CreateDate, CreateByUserId, RecommendationLevel, TransactionId)
+--    VALUES (@EmployeeId, @BonusAmount, 0, @GeorgianMonth + N' თვის ბონუსის ჩარიცხვა', @CreateDate, 1, 0, @TransactionId);
+
+--    -- რეკომენდატორების ბონუსები
+--    DECLARE @RecommenderId INT, @CurrentEmployeeId INT = @EmployeeId,
+--            @CurrentBonusAmount DECIMAL(18,2) = @BonusAmount,
+--            @Level INT = 1, @RecommendeeName NVARCHAR(100);
 
 --    WHILE @Level <= @MaxRecommendationLevel
 --    BEGIN
---        DECLARE @RecommenderId INT;
+--        SELECT @RecommenderId = RecommenderEmployeeId FROM Employees WHERE Id = @CurrentEmployeeId;
+--        IF @RecommenderId IS NULL BREAK;
 
---        SELECT @RecommenderId = RecommenderEmployeeId
---        FROM Employees
---        WHERE Id = @CurrentEmployeeId;
+--        SELECT @RecommendeeName = FirstName + N' ' + LastName FROM Employees WHERE Id = @CurrentEmployeeId;
 
---        IF @RecommenderId IS NULL
---            BREAK;
-        
 --        SET @CurrentBonusAmount = (@CurrentBonusAmount * @RecommendationBonusRate) / 100;
-       
---        INSERT INTO Bonuses (EmployeeId, Amount, IsRecommenderBonus, Reason, CreateDate, CreateByUserId, RecommendationLevel)
---        VALUES (@RecommenderId, @CurrentBonusAmount, 1, 'რეკომენდატორის ბონუსი', @CreateDate, 1, @Level);
-     
+
+--        INSERT INTO Bonuses (EmployeeId, Amount, IsRecommenderBonus, Reason, CreateDate, CreateByUserId, RecommendationLevel, TransactionId)
+--        VALUES (
+--            @RecommenderId,
+--            @CurrentBonusAmount,
+--            1,
+--            @GeorgianMonth + N' თვის ბონუსის ჩარიცხვა (' + @RecommendeeName + N'-ის რეკომენდაცია)',
+--            @CreateDate,
+--            1,
+--            @Level,
+--            @TransactionId
+--        );
+
 --        SET @CurrentEmployeeId = @RecommenderId;
---        SET @Level = @Level + 1;
+--        SET @Level += 1;
 --    END;
---END;
---GO
+
+--    -- უკან ვაბრუნებთ მხოლოდ ამ ტრანზაქციით დარიცხულ ბონუსებს
+--    SELECT 
+--        b.EmployeeId,
+--        b.Amount,
+--        b.IsRecommenderBonus,
+--        b.RecommendationLevel,
+--        b.Reason,
+--        b.CreateDate,
+--        b.CreateByUserId,
+--        e.FirstName,
+--        e.LastName,
+--        e.PersonalNumber
+--    FROM Bonuses b
+--    JOIN Employees e ON e.Id = b.EmployeeId
+--    WHERE b.TransactionId = @TransactionId;
+--END
 
 -- მითითებულ თარიღებში გაცემული ბონუსების რაოდენობა  GetTotalBonuses
 

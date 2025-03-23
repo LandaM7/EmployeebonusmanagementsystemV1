@@ -11,5 +11,6 @@ public class BonusEntity : BaseEntity
     public string Reason { get; set; } = string.Empty;
     public DateTime CreateDate { get; set; }
     public int CreateByUserId { get; set; }
+    public Guid TransactionId { get; set; }
 
 }
