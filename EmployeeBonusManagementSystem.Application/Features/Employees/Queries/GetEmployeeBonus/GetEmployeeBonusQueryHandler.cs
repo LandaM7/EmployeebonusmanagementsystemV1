@@ -28,7 +28,6 @@ namespace EmployeeBonusManagementSystem.Application.Features.Employees.Queries.G
 		{
 			var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("Id");
 
-			Console.WriteLine($"User id is : {userIdClaim}");
 			if (userIdClaim == null)
 			{
 				throw new UnauthorizedAccessException("User ID not found in token.");

@@ -1,5 +1,6 @@
 ﻿using EmployeeBonusManagementSystem.Domain.Common;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeBonusManagementSystem.Domain.Entities;
 
@@ -7,7 +8,9 @@ public class EmployeeEntity : BaseEntity
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public string PersonalNumber { get; set; } = string.Empty;
+
+    [StringLength(11, MinimumLength = 11, ErrorMessage = "Personal Number must be 11 digits.")]
+	public string PersonalNumber { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
     public string Email { get; set; } = string.Empty;
     public decimal Salary { get; set; }

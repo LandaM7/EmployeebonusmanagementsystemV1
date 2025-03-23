@@ -7,13 +7,14 @@ using System;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Http;
 
 namespace EmployeeBonusManagementSystem.Persistence.Repositories;
 
 public class BonusRepository(
         ISqlQueryRepository sqlQueryRepository,
         ISqlCommandRepository sqlCommandRepository,
-        IConfiguration configuration)
+        IConfiguration configuration,  IHttpContextAccessor httpContextAccessor)
         : IBonusRepository
 
 {
@@ -22,14 +23,24 @@ public class BonusRepository(
     {
         try
         {
-            var bonusesResult = await sqlQueryRepository.LoadMultipleData<AddBonusesDto, dynamic>(
-            "[HRManagementEmployee].[dbo].[AddBonuses]",
-            new { EmployeeId = bonus.EmployeeId, BonusAmount = bonus.Amount },
+	        var userIdClaim = httpContextAccessor.HttpContext?.User?.FindFirst("Id");
+
+	        if (userIdClaim == null)
+	        {
+		        throw new UnauthorizedAccessException("User ID not found in token.");
+	        }
+
+	        int userId = int.Parse(userIdClaim.Value);
+
+
+			var bonusesResult = await sqlQueryRepository.LoadMultipleData<AddBonusesDto, dynamic>(
+            "AddBonuses",
+            new { EmployeeId = bonus.EmployeeId, BonusAmount = bonus.Amount , CreateByUser = userId },
             configuration.GetConnectionString("DefaultConnection"),
             CommandType.StoredProcedure);
 
             //await unitOfWork.CommitAsync();
-
+            
             return bonusesResult.ToList();
         }
         catch (Exception ex)

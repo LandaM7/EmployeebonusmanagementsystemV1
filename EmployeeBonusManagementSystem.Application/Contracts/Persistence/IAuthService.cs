@@ -12,6 +12,7 @@ namespace EmployeeBonusManagement.Application.Services.Interfaces
     {
         
 	    Task<AuthResponse> LoginAsync(LoginDto loginDto);
+	    bool ValidatePassword(string password, out string errorMessage);
 
     }
 }

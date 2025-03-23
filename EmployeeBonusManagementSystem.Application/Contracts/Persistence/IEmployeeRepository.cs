@@ -1,8 +1,6 @@
-﻿using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
-using EmployeeBonusManagementSystem.Domain.Entities;
-using System.Collections.Generic;
+﻿using EmployeeBonusManagementSystem.Domain.Entities;
 using System.Data;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
@@ -20,6 +18,8 @@ public interface IEmployeeRepository
 	Task<IEnumerable<EmployeeEntity>> GetEmployeeRecomender(int Id);
 
     Task<(bool, int)> GetEmployeeExistsByPersonalNumberAsync(string personalNumber);
+    Task<PasswordVerificationResult> CheckPasswordByIdAsync(int id, string enteredPassword);
+	Task UpdateEmployeePasswordByIdAsync(int Id, string newHashedPassword);
 }
 
 

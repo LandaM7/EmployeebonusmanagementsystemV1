@@ -5,10 +5,7 @@ using MediatR;
 
 namespace EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 
-public class AddBonusesQueryHandler(
-    IUnitOfWork unitOfWork
-    /*JsonWebToken როლები*/)
-    : IRequestHandler<AddBonusesQuery, List<AddBonusesDto>>
+public class AddBonusesQueryHandler( IUnitOfWork unitOfWork) : IRequestHandler<AddBonusesQuery, List<AddBonusesDto>>
 {
     public async Task<List<AddBonusesDto>> Handle(
         AddBonusesQuery request,
@@ -35,7 +32,6 @@ public class AddBonusesQueryHandler(
             });
 
             await unitOfWork.CommitAsync();
-
             return bonuses;
         }
 

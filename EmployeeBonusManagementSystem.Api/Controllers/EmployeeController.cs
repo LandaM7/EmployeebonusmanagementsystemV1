@@ -5,6 +5,7 @@ using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Queries;
 using EmployeeBonusManagementSystem.Application.Features.Employees;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.AddEmployee;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.ChaingePassword;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Commands.Login;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeBonus;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeRecomendator;
@@ -44,6 +45,7 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 		    {
 			    return Ok(new { message = "Employee added successfully" });
 		    }
+
 		    return BadRequest(new { message = "Failed to add employee" });
 	    }
 
@@ -82,6 +84,18 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 		    var result = await _mediator.Send(new GetEmployeeRecommenderQuery());
 		    return Ok(result);
 	    }
+
+		[Authorize("User")]
+		[HttpPost("Password")]
+		public async Task<IActionResult> UpdatePassword([FromBody] ChangePasswordCommand command)
+		{
+			var result = await _mediator.Send(command);
+
+			if (result.Success)
+				return Ok(result);
+
+			return BadRequest(result);
+		}
 
 	}
 }

@@ -35,46 +35,44 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			_unitOfWork = unitOfWork;
 		}
 
+
 		public async Task<(bool, int)> GetEmployeeExistsByPersonalNumberAsync(string personalNumber)
 		{
-			var query = @"
-                    SELECT 
-                        Id 
-                    FROM
-                        [HRManagementEmployee].[dbo].[Employees](NOLOCK)
-                    WHERE
-                        PersonalNumber = @PersonalNumber;
-                "
-				;
-			if (_connection.State != ConnectionState.Open)
+			if (_unitOfWork.Connection.State != ConnectionState.Open)
 			{
-				_connection.Open();
+				await _unitOfWork.OpenAsync();  
 			}
 
-			// Start a transaction
-			_transaction = _connection.BeginTransaction();
-
-			try
+			using (var transaction = _unitOfWork.BeginTransaction()) 
 			{
-				// Execute the query
-				var result = await _connection.QueryFirstOrDefaultAsync<int>(
-					query,
-					new { PersonalNumber = personalNumber },
-					transaction: _transaction,
-					commandType: CommandType.Text
-				);
+				try
+				{
+					var query = @"
+				                SELECT 
+				                    Id 
+				                FROM
+				                    Employees(NOLOCK)
+				                WHERE
+				                    PersonalNumber = @PersonalNumber;
+            ";
 
-				// Commit the transaction if everything went well
-				_transaction.Commit();
-				//return result;
-				return (result > 0, result);
-			}
-			catch (Exception ex)
-			{
-				// Rollback the transaction in case of an error
-				_transaction.Rollback();
-				Console.WriteLine($"Error: {ex.Message}");
-				throw;
+					var result = await _unitOfWork.Connection.QueryFirstOrDefaultAsync<int>(
+						query,
+						new { PersonalNumber = personalNumber },
+						transaction: transaction,  // Use the transaction from UOW
+						commandType: CommandType.Text
+					);
+
+					transaction.Commit();
+
+					return (result > 0, result);
+				}
+				catch (Exception ex)
+				{
+					transaction.Rollback();
+					Console.WriteLine($"Error: {ex.Message}");
+					throw;
+				}
 			}
 		}
 
@@ -136,12 +134,72 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 			}
 		}
 
+		public async Task<string> GetEmployeePasswordByIdAsync(int Id)
+		{
+			if (_unitOfWork.Connection.State != ConnectionState.Open)
+			{
+				await _unitOfWork.OpenAsync();
+			}
 
+			using (var transaction = _unitOfWork.BeginTransaction())
+			{
+				try
+				{
+					var query = @"
+				                SELECT 
+				                    Password 
+				                FROM
+				                    Employees(NOLOCK)
+				                WHERE
+				                    Id = @Id;";
+
+					var result = await _unitOfWork.Connection.QueryFirstOrDefaultAsync<string>(
+						query,
+						new { Id = Id },
+						transaction: transaction,  // Use the transaction from UOW
+						commandType: CommandType.Text
+					);
+
+					transaction.Commit();
+
+					return result;
+				}
+				catch (Exception ex)
+				{
+					transaction.Rollback();
+					Console.WriteLine($"Error: {ex.Message}");
+					throw;
+				}
+			}
+		}
 
 		public async Task<EmployeeEntity> GetByIdAsync(int id)
 		{
 			var query = "SELECT * FROM Employees WHERE Id = @Id";
 			return await _connection.QueryFirstOrDefaultAsync<EmployeeEntity>(query, new { Id = id }, _transaction);
+		}
+
+		public async Task<PasswordVerificationResult> CheckPasswordByIdAsync(int id, string enteredPassword)
+		{
+			var userPassword = await GetEmployeePasswordByIdAsync(id);
+
+			Console.WriteLine($"userpassword from database first: {userPassword}");
+			if (string.IsNullOrEmpty(userPassword))
+			{
+				return PasswordVerificationResult.Failed;
+			}
+
+			var hasher = new PasswordHasher<EmployeeEntity>();
+			return hasher.VerifyHashedPassword(null, userPassword, enteredPassword);
+		}
+
+		public async Task UpdateEmployeePasswordByIdAsync(int Id, string newHashedPassword)
+		{
+			Console.WriteLine($" newHashed password to add in database {newHashedPassword}");
+			string query = "UPDATE Employees SET Password = @PasswordHash WHERE Id = @Id";
+			var parameters = new { Id = Id, PasswordHash = newHashedPassword };
+			await _unitOfWork.Connection.ExecuteAsync(query, parameters);
+
 		}
 
 		public async Task<EmployeeEntity> GetByEmailAsync(string email)
@@ -201,14 +259,11 @@ namespace EmployeeBonusManagementSystem.Persistence.Repositories.Implementations
 
 			if (result == PasswordVerificationResult.SuccessRehashNeeded)
 			{
-				// The password is correct, but needs rehashing
-				// Rehash and update the password
+				
 				var newHashedPassword = hasher.HashPassword(user, enteredPassword);
 				user.Password = newHashedPassword;
 
-				//await _employeeRepository.UpdatePasswordAsync(user);
-
-				return true; // Password is correct, and we've rehashed it
+				return true;
 			}
 
 			return result == PasswordVerificationResult.Success;

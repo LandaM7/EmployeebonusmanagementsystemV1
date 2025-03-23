@@ -15,8 +15,10 @@ public class DepartmentEntityConfiguration : IEntityTypeConfiguration<Department
         builder.Property(d => d.Name)
             .HasMaxLength(255)
             .IsRequired();
+        builder.HasIndex(e => e.Name)
+	        .IsUnique();
 
-        builder.Property(d => d.CreateDate)
+		builder.Property(d => d.CreateDate)
             .IsRequired();
 
         builder.Property(d => d.IsActive)
