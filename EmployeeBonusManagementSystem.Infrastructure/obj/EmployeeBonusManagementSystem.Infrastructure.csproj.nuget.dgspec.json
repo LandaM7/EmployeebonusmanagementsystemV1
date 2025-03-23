@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj": {}
+    "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj": {
+    "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj",
+        "projectUniqueName": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj",
         "projectName": "EmployeeBonusManagementSystem.Application",
-        "projectPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Application\\obj\\",
+        "projectPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj",
+        "packagesPath": "C:\\Users\\lmindiashvili\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Application\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\lmindiashvili\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,14 +22,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj": {
-                "projectPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj"
+              "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj": {
+                "projectPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj"
               }
             }
           }
@@ -47,46 +44,11 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "dependencies": {
-            "AutoMapper": {
-              "target": "Package",
-              "version": "[14.0.0, )"
-            },
-            "MediatR": {
-              "target": "Package",
-              "version": "[12.4.1, )"
-            },
-            "Microsoft.AspNet.Identity.Core": {
-              "target": "Package",
-              "version": "[2.2.4, )"
-            },
-            "Microsoft.AspNetCore.Identity": {
-              "target": "Package",
-              "version": "[2.3.1, )"
-            },
-            "Microsoft.Build.Framework": {
-              "target": "Package",
-              "version": "[17.8.3, )"
-            },
-            "Microsoft.Data.SqlClient": {
-              "target": "Package",
-              "version": "[6.0.1, )"
-            },
-            "Microsoft.Extensions.Configuration.Json": {
-              "target": "Package",
-              "version": "[9.0.3, )"
-            },
-            "Microsoft.Extensions.DependencyInjection.Abstractions": {
-              "target": "Package",
-              "version": "[9.0.2, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -98,30 +60,21 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj": {
+    "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj",
         "projectName": "EmployeeBonusManagementSystem.Domain",
-        "projectPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Domain\\obj\\",
+        "projectPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Domain\\EmployeeBonusManagementSystem.Domain.csproj",
+        "packagesPath": "C:\\Users\\lmindiashvili\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Domain\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\lmindiashvili\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -129,6 +82,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -146,22 +100,11 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "dependencies": {
-            "Microsoft.Data.SqlClient": {
-              "target": "Package",
-              "version": "[6.0.1, )"
-            },
-            "Microsoft.Extensions.Configuration.Json": {
-              "target": "Package",
-              "version": "[9.0.3, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -173,30 +116,21 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj": {
+    "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj",
         "projectName": "EmployeeBonusManagementSystem.Infrastructure",
-        "projectPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Infrastructure\\EmployeeBonusManagementSystem.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\lmindiashvili\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\lmindiashvili\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -204,14 +138,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj": {
-                "projectPath": "D:\\DevAcademy\\Final Project\\ProjectLanda\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj"
+              "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj": {
+                "projectPath": "C:\\Users\\lmindiashvili\\Desktop\\პროექტი\\EmployeeBonusManagementSystem.Application\\EmployeeBonusManagementSystem.Application.csproj"
               }
             }
           }
@@ -225,30 +160,11 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "dependencies": {
-            "Dapper": {
-              "target": "Package",
-              "version": "[2.1.66, )"
-            },
-            "Microsoft.Data.SqlClient": {
-              "target": "Package",
-              "version": "[6.0.1, )"
-            },
-            "Microsoft.Extensions.Configuration.Json": {
-              "target": "Package",
-              "version": "[9.0.3, )"
-            },
-            "Microsoft.Extensions.DependencyInjection.Abstractions": {
-              "target": "Package",
-              "version": "[9.0.3, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -260,12 +176,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
