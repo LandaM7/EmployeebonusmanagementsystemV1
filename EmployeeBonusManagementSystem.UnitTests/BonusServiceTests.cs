@@ -1,6 +1,7 @@
 ﻿using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 using EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
 using EmployeeBonusManagementSystem.Domain.Entities;
+using EmployeeBonusManagementSystem.Persistence;
 using FakeItEasy;
 
 namespace EmployeeBonusManagementSystem.UnitTests
