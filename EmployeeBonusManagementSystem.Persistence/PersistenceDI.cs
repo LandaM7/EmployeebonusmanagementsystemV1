@@ -8,9 +8,11 @@ using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
 using EmployeeBonusManagementSystem.Domain.Entities;
 using EmployeeBonusManagementSystem.Infrastructure.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Factory;
+using EmployeeBonusManagementSystem.Persistence.Repositories;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Common;
 using EmployeeBonusManagementSystem.Persistence.Repositories.Implementations;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -21,51 +23,44 @@ namespace EmployeeBonusManagementSystem.Persistence;
 
 public static class PersistenceDI
 {
-    public static IServiceCollection AddPersistence(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        // DB კონტექსტის დამატება 
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+	public static IServiceCollection AddPersistence(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		services.AddDbContext<ApplicationDbContext>(options =>
+			options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IDbConnection>(provider =>
-        {
-	        return new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        });
+		services.AddScoped<IDbConnection>(provider =>
+			new SqlConnection(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IDbConnectionFactory>(provider =>
-	        new SqlConnectionFactory(configuration.GetConnectionString("DefaultConnection")));
+		services.AddScoped<IDbConnectionFactory>(provider =>
+			new SqlConnectionFactory(configuration.GetConnectionString("DefaultConnection")));
 
 		services.AddScoped<IDbTransaction>(provider =>
-        {
-	        var connection = provider.GetRequiredService<IDbConnection>();
-	        connection.Open();
-	        return connection.BeginTransaction();
-        });
+		{
+			var connection = provider.GetRequiredService<IDbConnection>();
+			connection.Open();
+			return connection.BeginTransaction();
+		});
 
-		
+		services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+		services.AddScoped<IBonusRepository, BonusRepository>();
+		services.AddScoped<IReportRepository, ReportRepository>();
+		services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
+		services.AddScoped<ISqlCommandRepository, SqlCommandRepository>();
+
+		//services.AddScoped<IHttpContextAccessor>();
 
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IEmployeeService<EmployeeDto>, ManageEmployeesService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
 
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
-
+		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<RoleAssignmentService>();
-        services.AddScoped<IRequestHandler<AddEmployeeCommand, bool>, AddEmployeeCommandHandler>();
 
-        services.AddScoped<IReportRepository, ReportRepository>();
-        services.AddScoped<ISqlQueryRepository, SqlQueryRepository>();
-
-
-
+		services.AddScoped<IRequestHandler<AddEmployeeCommand, bool>, AddEmployeeCommandHandler>();
 
 		return services;
+   
 
-    }
+	}
 }
 

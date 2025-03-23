@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using EmployeeBonusManagementSystem.Application.Features.Employees.Common;
+using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeSalary;
 using EmployeeBonusManagementSystem.Domain.Entities;
 
 namespace EmployeeBonusManagementSystem.Application.Mapping
 {
 	using AutoMapper;
+	using EmployeeBonusManagementSystem.Application.Features.Employees.Queries.GetEmployeeRecomendator;
 
 	public class EmployeeProfile : Profile
 	{
@@ -36,6 +38,8 @@ namespace EmployeeBonusManagementSystem.Application.Mapping
 
 
 			CreateMap<EmployeeEntity, EmployeeDto>();
+			CreateMap<EmployeeEntity, GetEmployeeSalaryDto>();
+			CreateMap<EmployeeEntity, GetEmployeeRecommenderDto>();
 
 		}
 	}

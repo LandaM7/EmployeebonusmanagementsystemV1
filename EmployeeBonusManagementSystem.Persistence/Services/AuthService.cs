@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EmployeeBonusManagement.Application.Services.Interfaces;
 using EmployeeBonusManagementSystem.Application.Contracts.Persistence;
@@ -23,7 +24,6 @@ namespace EmployeeBonusManagement.Application.Services
 		private readonly IEmployeeRepository _employeeRepository;
 		private readonly IJwtService _jwtService;
 		private readonly IUnitOfWork _unitOfWork;
-
 
 		public AuthService(IEmployeeRepository employeeRepository, IUnitOfWork unitOfWork , IJwtService jwtService)
 		{
@@ -60,6 +60,37 @@ namespace EmployeeBonusManagement.Application.Services
 
 			_unitOfWork.Commit(); // Commit transaction if successful
 			return response;
+		}
+
+		public  bool ValidatePassword(string password, out string errorMessage)
+		{
+			errorMessage = string.Empty;
+
+			if (string.IsNullOrWhiteSpace(password))
+			{
+				errorMessage = "Password cannot be empty.";
+				return false;
+			}
+
+			if (password.Length < 8)
+			{
+				errorMessage = "Password must be at least 8 characters long.";
+				return false;
+			}
+
+			if (!Regex.IsMatch(password, @"[A-Za-z]"))
+			{
+				errorMessage = "Password must contain at least one letter.";
+				return false;
+			}
+
+			if (!Regex.IsMatch(password, @"\d"))
+			{
+				errorMessage = "Password must contain at least one number.";
+				return false;
+			}
+
+			return true;
 		}
 	}
 }

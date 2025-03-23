@@ -1,10 +1,11 @@
-﻿using EmployeeBonusManagementSystem.Domain.Entities;
+﻿using EmployeeBonusManagementSystem.Application.Features.Bonuses.Commands.AddBonuses;
+using EmployeeBonusManagementSystem.Domain.Entities;
 using System.Threading.Tasks;
 
 namespace EmployeeBonusManagementSystem.Application.Contracts.Persistence;
 
 public interface IBonusRepository
 {
-    //Task<int> AddBonusAsync(BonusEntity bonus);
-    //Task AddRecommenderBonusAsync(int employeeId, decimal bonusAmount);
+    public Task<List<AddBonusesDto>> AddBonusAsync(BonusEntity bonus);
+
 }
