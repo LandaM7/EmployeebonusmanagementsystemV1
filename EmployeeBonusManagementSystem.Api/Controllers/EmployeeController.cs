@@ -49,17 +49,7 @@ namespace EmployeeBonusManagementSystem.Api.Controllers
 		    return BadRequest(new { message = "Failed to add employee" });
 	    }
 
-	    [HttpPost("login")]
-	    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
-	    {
-		    var result = await _mediator.Send(new LoginCommand(loginDto));
-
-		    if (result.Success)
-			    return Ok(result);
-
-		    return Unauthorized(new { message = "Invalid credentials" });
-	    }
-
+		   
 	    [Authorize("User")]
 		[HttpGet("Bonus")]
 	    public async Task<ActionResult<List<GetEmployeeBonusDto>>> GetEmoloyeeBonus()
